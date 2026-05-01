@@ -1,0 +1,20 @@
+# KiCad
+*.bak
+*.bck
+*~
+*-backups/
+fp-info-cache
+*.kicad_prl
+
+# Gerber output
+gerber/
+fabrication/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
