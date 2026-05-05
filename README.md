@@ -1,6 +1,8 @@
 # smart-retro-hid-hardware
 
-smart-retro-hidプロジェクトのマイコン基板設計データ（KiCad）。
+**製品名: Mimic X**
+
+「Mimic X」プロジェクトのマイコン基板設計データ（KiCad）。
 
 ## 基板バリエーション
 
