@@ -1,0 +1,13 @@
+from "XKB_Connectivity_TS_1187A_B_A_B/XKB_Connectivity_TS_1187A_B_A_B.ato" import XKB_Connectivity_TS_1187A_B_A_B_package
+
+
+module TactSwitch_4P:
+    """4 ピン SMD タクトスイッチ — XKB TS-1187A-B-A-B (LCSC C318884)。
+
+    A+B ペア と C+D ペアは内部で短絡されており、押下時に {A,B} と {C,D} が
+    導通する。ラッパーでは `terminal_a` / `terminal_b` として公開する。
+    """
+
+    chip = new XKB_Connectivity_TS_1187A_B_A_B_package
+    signal terminal_a;  terminal_a ~ chip.A; terminal_a ~ chip.B
+    signal terminal_b;  terminal_b ~ chip.C; terminal_b ~ chip.D

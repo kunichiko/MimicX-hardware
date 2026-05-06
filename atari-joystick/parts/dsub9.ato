@@ -2,24 +2,24 @@ from "CONNFLY_Elec_DS1037_09FNAKT74_0CC/CONNFLY_Elec_DS1037_09FNAKT74_0CC.ato" i
 
 
 module DSub9Female:
-    """D-SUB 9pin **female** connector (CONNFLY DS1037-09FNAKT74-0CC,
-    right-angle THT). The X68000 host port is male, so the adapter board
-    side mounts a female receptacle for direct insertion.
+    """D-SUB 9pin **メス** コネクタ (CONNFLY DS1037-09FNAKT74-0CC, ライトアングル
+    THT)。X68000 ホスト側ポートはオスなので、当アダプタ基板側はメスを実装して
+    直挿しできるようにする。
 
-    Pin layout (looking at the connector mating face — female):
+    ピン配置 (コネクタ嵌合面から見たメス):
 
-        5 4 3 2 1     (mirrored vs male; pin 1 on the right)
+        5 4 3 2 1     (オスとは左右が反転、ピン 1 が右)
          9 8 7 6
 
-    ATARI / X68000 standard joystick port pin mapping:
+    ATARI / X68000 標準ジョイスティックポートのピンアサイン:
         1: Up         6: TRIG-A
         2: Down       7: TRIG-B
-        3: Left       8: COMMON / TH (MD 6-button MUX)
+        3: Left       8: COMMON / TH (MD 6 ボタン MUX)
         4: Right      9: GND
-        5: +5V (host-supplied; usually NC)
+        5: +5V (ホスト給電。通常 NC)
 
-    Signals are exposed by function name (up/down/.../triga/trigb/common/gnd)
-    rather than pin number.
+    各信号はピン番号ではなく機能名 (up/down/.../triga/trigb/common/gnd) で
+    公開する。
     """
 
     chip = new CONNFLY_Elec_DS1037_09FNAKT74_0CC_package

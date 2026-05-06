@@ -10,30 +10,40 @@ from "parts/usb_type_c.ato" import UsbTypeC_16P
 from "parts/dsub9.ato" import DSub9Female
 from "parts/leds.ato" import LedGreen0603
 from "parts/leds.ato" import LedRed0603
+from "parts/buttons.ato" import TactSwitch_4P
+from "parts/ldo_3v3.ato" import Ldo3V3
 
 
 module AtariJoystick:
     """
-    Mimic X — ATARI joystick adapter.
+    Mimic X — ATARI ジョイスティックアダプタ。
 
     USB Type-C (sink/UFP)  ──>  CH32X035G8U6 (MCU, USB FS)  ──>  D-SUB 9pin
-    Compatible with X68000 (ATARI standard) joystick port.
+    X68000 (ATARI 標準) ジョイスティックポートに対応。
 
-    See README.md for pin assignments and design rationale.
+    ピン割当・設計理由は README.md を参照。
     """
 
-    # ===== top-level rails =====
-    vbus = new ElectricPower    # 5V from USB
-    # Force readable net names instead of the default "hv" / "lv".
+    # ===== トップレベル電源レール =====
+    vbus = new ElectricPower    # USB バスパワー (5V)
+    # ネット名を既定の "hv" / "lv" ではなく可読な名前に固定する。
     trait vbus.hv has_net_name<name="VBUS">
     trait vbus.lv has_net_name<name="GND">
 
-    # ===== sub-blocks =====
+    # MCU 用 3.3V レール。CH32X035 の USB トランシーバ出力は VDD 直結のため、
+    # USB ホスト互換性 (特に Pixel 等の規格準拠ホスト) の観点から VDD は必ず
+    # 3.3V に降圧する。詳細は docs/CH32X035.md と parts/ldo_3v3.ato を参照。
+    vdd33 = new ElectricPower
+    trait vdd33.hv has_net_name<name="VDD33">
+    trait vdd33.lv has_net_name<name="GND">
+
+    # ===== サブブロック =====
     mcu  = new CH32X035G8U6
     usbc = new UsbTypeC_16P
     joy  = new DSub9Female
+    ldo  = new Ldo3V3
 
-    # ===== USB Type-C: 5.1k CC pull-downs (UFP / sink) =====
+    # ===== USB Type-C: 5.1kΩ CC プルダウン (UFP / sink) =====
     rcc1 = new Resistor
     rcc1.resistance = 5.1kohm +/- 5%
     rcc1.package = "I0402"
@@ -44,48 +54,71 @@ module AtariJoystick:
     rcc2.package = "I0402"
     usbc.cc2 ~> rcc2 ~> vbus.lv
 
-    # ===== USB power & data =====
+    # ===== USB 電源とデータ =====
     usbc.vbus ~ vbus.hv
     usbc.gnd  ~ vbus.lv
 
-    mcu.vdd ~ vbus.hv
-    mcu.vss ~ vbus.lv
+    # ===== 5V (VBUS) -> 3.3V (VDD33) LDO =====
+    ldo.power_in  ~ vbus
+    ldo.power_out ~ vdd33
 
-    # USB D+/D- — keep short, 90 Ω differential preferred.
-    # TODO: add common-mode choke + ESD TVS array (e.g. USBLC6-2SC6).
+    # MCU は 3.3V で駆動 (USB トランシーバの D+/D- 出力レベルを 3.3V に揃える)
+    mcu.vdd ~ vdd33.hv
+    mcu.vss ~ vdd33.lv
+
+    # USB D+/D- — できるだけ短く、90Ω 差動配線が望ましい。
+    # TODO: コモンモードチョーク + ESD TVS アレイ (USBLC6-2SC6 等) を追加する。
     usbc.dp ~ mcu.usb_dp
     usbc.dn ~ mcu.usb_dm
 
-    # ===== VDD decoupling (place close to MCU VDD pin) =====
+    # ===== VDD33 デカップリング (MCU の VDD ピン直近に配置) =====
     cbulk = new Capacitor
     cbulk.capacitance = 4.7uF +/- 20%
     cbulk.package = "I0603"
-    cbulk.power ~ vbus
+    cbulk.power ~ vdd33
 
     cdec = new Capacitor
     cdec.capacitance = 100nF +/- 10%
     cdec.package = "I0402"
-    cdec.power ~ vbus
+    cdec.power ~ vdd33
 
-    # ===== Debug LEDs (PB3 = green, PB4 = red) — active LOW =====
-    # VBUS -> LED anode -> cathode -> R -> MCU pin (MCU sinks to light LED).
+    # ===== デバッグ LED (PB3 = 緑, PB4 = 赤) — アクティブ Low =====
+    # VDD33 -> LED アノード -> カソード -> R -> MCU ピン (MCU 側で吸い込んで点灯)。
+    # VDD33 = 3.3V, Vf ≈ 2.0V (緑) / 1.8V (赤) のため、約 2.6〜3 mA を狙って 470Ω に設定。
     led0 = new LedGreen0603
     rled0 = new Resistor
-    rled0.resistance = 1kohm +/- 5%
+    rled0.resistance = 470ohm +/- 5%
     rled0.package = "I0402"
-    vbus.hv ~ led0.anode
+    vdd33.hv ~ led0.anode
     led0.cathode ~> rled0 ~> mcu.PB3
 
     led1 = new LedRed0603
     rled1 = new Resistor
-    rled1.resistance = 1kohm +/- 5%
+    rled1.resistance = 470ohm +/- 5%
     rled1.package = "I0402"
-    vbus.hv ~ led1.anode
+    vdd33.hv ~ led1.anode
     led1.cathode ~> rled1 ~> mcu.PB4
 
-    # ===== D-SUB 9pin joystick output (ATARI / X68000 standard) =====
-    # Direction / trigger lines: open-drain emulation in firmware
-    # (GPIO_CNF_OUT_OD). Host (X68000 / MD) provides pull-ups.
+    # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
+    # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
+    # USB DFU ブートローダに入る。4.7kΩ 直列抵抗で USB データラインと電源を
+    # 分離し、通常の USB enumeration ではホスト側が D+ を駆動できるようにする。
+    #
+    # 重要: ここは VBUS (5V) ではなく VDD33 (3.3V) を使う。USB D+ アイドル電圧は
+    # VDD レベル (= 3.3V) であるため、5V を印加すると規格違反となり、Pixel 等の
+    # 規格準拠ホストで attach できなくなる。
+    #
+    # VDD33 ── btn ── 4.7kΩ ── PC17 (mcu.usb_dp)
+    boot_btn = new TactSwitch_4P
+    rboot = new Resistor
+    rboot.resistance = 4.7kohm +/- 5%
+    rboot.package = "I0402"
+    vdd33.hv ~ boot_btn.terminal_a
+    boot_btn.terminal_b ~> rboot ~> mcu.usb_dp
+
+    # ===== D-SUB 9pin ジョイスティック出力 (ATARI / X68000 標準) =====
+    # 方向 / トリガ線はファーム側で擬似 open-drain (GPIO_CNF_OUT_OD)。
+    # プルアップはホスト (X68000 / MD) 側が用意する。
     mcu.PA7 ~ joy.up
     mcu.PA4 ~ joy.down
     mcu.PA2 ~ joy.left
@@ -93,12 +126,12 @@ module AtariJoystick:
     mcu.PA6 ~ joy.triga
     mcu.PA3 ~ joy.trigb
 
-    # COMMON / TH (input from host) — MD 6-button MUX detect via TIM2_CH1.
-    # TODO: add series 100Ω + TVS clamp for ESD protection on this pin.
+    # COMMON / TH (ホストからの入力) — MD 6 ボタンの MUX 切替検出を TIM2_CH1 で実施。
+    # TODO: このピンに 100Ω 直列抵抗 + TVS クランプによる ESD 保護を追加する。
     mcu.PA0 ~ joy.common
 
-    # GND common with host
+    # ホストと共通 GND
     joy.gnd ~ vbus.lv
 
-    # Pin 5 (+5V from host): leave NC by default. A 0Ω jumper / Schottky
-    # diode to VBUS could be added later if back-feed power is desired.
+    # Pin 5 (ホストからの +5V): 既定では NC。後付けで 0Ω ジャンパや Schottky
+    # ダイオードを VBUS に向けて追加すれば、ホスト → 当基板への給電も可能。
