@@ -1,0 +1,103 @@
+#pragma experiment("BRIDGE_CONNECT")
+
+import ElectricPower
+import Resistor
+import Capacitor
+import LED
+import has_net_name
+
+from "parts/ch32x035.ato" import CH32X035G8U6
+from "parts/usb_type_c.ato" import UsbTypeC_16P
+from "parts/dsub9.ato" import DSub9Female
+
+
+module AtariJoystick:
+    """
+    Mimic X — ATARI joystick adapter.
+
+    USB Type-C (sink/UFP)  ──>  CH32X035G8U6 (MCU, USB FS)  ──>  D-SUB 9pin
+    Compatible with X68000 (ATARI standard) joystick port.
+
+    See README.md for pin assignments and design rationale.
+    """
+
+    # ===== top-level rails =====
+    vbus = new ElectricPower    # 5V from USB
+    # Force readable net names instead of the default "hv" / "lv".
+    trait vbus.hv has_net_name<name="VBUS">
+    trait vbus.lv has_net_name<name="GND">
+
+    # ===== sub-blocks =====
+    mcu  = new CH32X035G8U6
+    usbc = new UsbTypeC_16P
+    joy  = new DSub9Female
+
+    # ===== USB Type-C: 5.1k CC pull-downs (UFP / sink) =====
+    rcc1 = new Resistor
+    rcc1.resistance = 5.1kohm +/- 5%
+    rcc1.package = "I0402"
+    usbc.cc1 ~> rcc1 ~> vbus.lv
+
+    rcc2 = new Resistor
+    rcc2.resistance = 5.1kohm +/- 5%
+    rcc2.package = "I0402"
+    usbc.cc2 ~> rcc2 ~> vbus.lv
+
+    # ===== USB power & data =====
+    usbc.vbus ~ vbus.hv
+    usbc.gnd  ~ vbus.lv
+
+    mcu.vdd ~ vbus.hv
+    mcu.vss ~ vbus.lv
+
+    # USB D+/D- — keep short, 90 Ω differential preferred.
+    # TODO: add common-mode choke + ESD TVS array (e.g. USBLC6-2SC6).
+    usbc.dp ~ mcu.usb_dp
+    usbc.dn ~ mcu.usb_dm
+
+    # ===== VDD decoupling (place close to MCU VDD pin) =====
+    cbulk = new Capacitor
+    cbulk.capacitance = 4.7uF +/- 20%
+    cbulk.package = "I0603"
+    cbulk.power ~ vbus
+
+    cdec = new Capacitor
+    cdec.capacitance = 100nF +/- 10%
+    cdec.package = "I0402"
+    cdec.power ~ vbus
+
+    # ===== Debug LEDs (PB3, PB4) — active LOW =====
+    # VBUS -> LED -> R -> MCU pin (MCU sinks current to light LED).
+    led0 = new LED
+    led0.package = "I0603"
+    rled0 = new Resistor
+    rled0.resistance = 1kohm +/- 5%
+    rled0.package = "I0402"
+    vbus.hv ~> led0 ~> rled0 ~> mcu.PB3
+
+    led1 = new LED
+    led1.package = "I0603"
+    rled1 = new Resistor
+    rled1.resistance = 1kohm +/- 5%
+    rled1.package = "I0402"
+    vbus.hv ~> led1 ~> rled1 ~> mcu.PB4
+
+    # ===== D-SUB 9pin joystick output (ATARI / X68000 standard) =====
+    # Direction / trigger lines: open-drain emulation in firmware
+    # (GPIO_CNF_OUT_OD). Host (X68000 / MD) provides pull-ups.
+    mcu.PA7 ~ joy.up
+    mcu.PA4 ~ joy.down
+    mcu.PA2 ~ joy.left
+    mcu.PA1 ~ joy.right
+    mcu.PA6 ~ joy.triga
+    mcu.PA3 ~ joy.trigb
+
+    # COMMON / TH (input from host) — MD 6-button MUX detect via TIM2_CH1.
+    # TODO: add series 100Ω + TVS clamp for ESD protection on this pin.
+    mcu.PA0 ~ joy.common
+
+    # GND common with host
+    joy.gnd ~ vbus.lv
+
+    # Pin 5 (+5V from host): leave NC by default. A 0Ω jumper / Schottky
+    # diode to VBUS could be added later if back-feed power is desired.

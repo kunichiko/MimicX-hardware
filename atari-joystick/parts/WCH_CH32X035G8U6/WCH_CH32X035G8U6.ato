@@ -1,0 +1,46 @@
+import has_datasheet
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+import is_auto_generated
+
+component WCH_CH32X035G8U6_package:
+    # This trait marks this file as auto-generated
+    # If you want to manually change it, remove the trait
+    trait is_auto_generated<system="ato_part", source="easyeda:C7437027", date="2026-05-05T23:19:11.528525+00:00", checksum="272804ef40f2236965b0f9497b5c004cc374ff86673ef402c570e95c9500c552">
+
+    trait is_atomic_part<manufacturer="WCH", partnumber="CH32X035G8U6", footprint="QFN-28_L4.0-W4.0-P0.40-BL-EP2.8.kicad_mod", symbol="CH32X035G8U6.kicad_sym", model="QFN-28_L4.0-W4.0-P0.40-BL-EP2.8.STEP">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C7437027", manufacturer="WCH", partno="CH32X035G8U6">
+    trait has_designator_prefix<prefix="U">
+    trait has_datasheet<datasheet="https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404070952_WCH-Jiangsu-Qin-Heng-CH32X035G8U6_C7437027.pdf">
+
+    # pins
+    signal GND ~ pin 29
+    signal PA0_T2C1_CTS2_C1P1_A0 ~ pin 5
+    signal PA1_RTS2_T2C2_C1O_O1N2_O2N2_A1 ~ pin 6
+    signal PA2_TX2_T2C3_O2O1_T2ET_A2 ~ pin 7
+    signal PA3_T2C4_O1O0_T3C1_RX2_A3 ~ pin 8
+    signal PA4_CS_O2O0_T3C2_A4 ~ pin 9
+    signal PA5_SCK_TX4_O2N0_A5 ~ pin 10
+    signal PA6_MISO_T3C1_T1BK_O1N0_A6 ~ pin 11
+    signal PA7_MOSI_T3C2_T1C1N_TX1_O2P0_A7 ~ pin 12
+    signal PB0_TX4_T1C2N_O1P0_A8 ~ pin 13
+    signal PB1_T1C3N_RX4_O2N1_A9_PB5_O1O1_T3C2_T1BK ~ pin 16
+    signal PB3_TX3_T2C3_T2C3N_O2P1 ~ pin 14
+    signal PB4_T2C4_T3C1_T2BK_RX3_O1P2 ~ pin 15
+    signal PB6_T1C1N_CTS3_O1N1 ~ pin 17
+    signal PB7_T1C2N_RTS3_O2P2 ~ pin 18
+    signal PB8_T1C3N_O1P1 ~ pin 19
+    signal PB9_T1C1_MCO_TX4_ ~ pin 20
+    signal PB10_TX1_T1C2 ~ pin 21
+    signal PB11_T1C3_T2C1N_RX1 ~ pin 22
+    signal PB12_T1C4_T2C2N_ ~ pin 23
+    signal PC0_TX2_T2C4_T1C1_T2BK_A10 ~ pin 3
+    signal PC3_T1C4_T2C3N_T2C1N_C1N0_A13 ~ pin 4
+    signal PC14_CC1_T1C3_T2C2_ ~ pin 28
+    signal PC15_CC2_T2C3_T1ET_ ~ pin 1
+    signal PC16_UDM_T1C4_TX4_I2C_RX4_CTS1_PC11 ~ pin 26
+    signal PC17_UDP_RTS1_TX4_I2C_RX4_T1ET_PC10 ~ pin 27
+    signal PC18_DIO_TX3_T2C1N_T3C2_I2C_T1ET_ ~ pin 25
+    signal PC19_DCK_T2C1_T3C1_I2C_RX3_C1P0 ~ pin 24
+    signal VDD ~ pin 2

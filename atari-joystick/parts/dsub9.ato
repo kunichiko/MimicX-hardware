@@ -1,0 +1,37 @@
+from "CONNFLY_Elec_DS1037_09FNAKT74_0CC/CONNFLY_Elec_DS1037_09FNAKT74_0CC.ato" import CONNFLY_Elec_DS1037_09FNAKT74_0CC_package
+
+
+module DSub9Female:
+    """D-SUB 9pin **female** connector (CONNFLY DS1037-09FNAKT74-0CC,
+    right-angle THT). The X68000 host port is male, so the adapter board
+    side mounts a female receptacle for direct insertion.
+
+    Pin layout (looking at the connector mating face — female):
+
+        5 4 3 2 1     (mirrored vs male; pin 1 on the right)
+         9 8 7 6
+
+    ATARI / X68000 standard joystick port pin mapping:
+        1: Up         6: TRIG-A
+        2: Down       7: TRIG-B
+        3: Left       8: COMMON / TH (MD 6-button MUX)
+        4: Right      9: GND
+        5: +5V (host-supplied; usually NC)
+
+    Signals are exposed by function name (up/down/.../triga/trigb/common/gnd)
+    rather than pin number.
+    """
+
+    chip = new CONNFLY_Elec_DS1037_09FNAKT74_0CC_package
+
+    signal up;     up     ~ chip.1
+    signal down;   down   ~ chip.2
+    signal left;   left   ~ chip.3
+    signal right;  right  ~ chip.4
+    signal vcc;    vcc    ~ chip.5
+    signal triga;  triga  ~ chip.6
+    signal trigb;  trigb  ~ chip.7
+    signal common; common ~ chip.8
+    signal gnd;    gnd    ~ chip.9
+
+    signal shell;  shell ~ chip.MH1; shell ~ chip.MH2

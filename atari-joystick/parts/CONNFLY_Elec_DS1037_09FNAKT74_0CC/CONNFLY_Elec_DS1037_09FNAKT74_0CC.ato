@@ -1,0 +1,30 @@
+import has_datasheet
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+import is_auto_generated
+
+component CONNFLY_Elec_DS1037_09FNAKT74_0CC_package:
+    """D-SUB,9pin ,,90,,2.77mm,,"""
+
+    # This trait marks this file as auto-generated
+    # If you want to manually change it, remove the trait
+    trait is_auto_generated<system="ato_part", source="easyeda:C75749", date="2026-05-05T23:32:15.557982+00:00", checksum="002e277ed92619baf54a9a0dcf1831874184bf82ff6a6685c455103855a5dcba">
+
+    trait is_atomic_part<manufacturer="CONNFLY Elec", partnumber="DS1037-09FNAKT74-0CC", footprint="DSUB-TH_DS1037-09FNAKT74-0CC.kicad_mod", symbol="DS1037-09FNAKT74-0CC.kicad_sym", model="DSUB-TH_DMR-9S.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C75749", manufacturer="CONNFLY Elec", partno="DS1037-09FNAKT74-0CC">
+    trait has_designator_prefix<prefix="J">
+    trait has_datasheet<datasheet="https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_CONNFLY-Elec-DS1037-09FNAKT74-0CC_C75749.pdf">
+
+    # pins
+    pin 1
+    pin 2
+    pin 3
+    pin 4
+    pin 5
+    pin 6
+    pin 7
+    pin 8
+    pin 9
+    signal MH1 ~ pin 10
+    signal MH2 ~ pin 11
