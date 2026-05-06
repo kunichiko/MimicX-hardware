@@ -273,7 +273,7 @@
 	)
 	(model "${KIPRJMOD}/../../parts/Korean_Hroparts_Elec_TYPE_C_31_M_12/USB-C_SMD-TYPE-C-31-M-12.step"
 		(offset
-			(xyz 0 0 0.85)
+			(xyz 0 -2.54 0)
 		)
 		(scale
 			(xyz 1 1 1)

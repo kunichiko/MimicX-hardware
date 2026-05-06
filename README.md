@@ -5,7 +5,7 @@
 「Mimic X」プロジェクトのマイコン基板設計データ（KiCad）。
 
 各バリエーションごとにサブフォルダに KiCad プロジェクトと設計仕様 (README) を
-置く。共通 MCU は **WCH CH32X035F8U6** (TSSOP-20)、USB は Type-C で
+置く。共通 MCU は **WCH CH32X035G8U6** (QFN-28)、USB は Type-C で
 スマートフォンと接続する。
 
 ## 基板バリエーション

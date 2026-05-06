@@ -333,7 +333,7 @@
 	)
 	(model "${KIPRJMOD}/../../parts/WCH_CH32X035G8U6/QFN-28_L4.0-W4.0-P0.40-BL-EP2.8.STEP"
 		(offset
-			(xyz 0 0 -0)
+			(xyz 0 0 0.74)
 		)
 		(scale
 			(xyz 1 1 1)
