@@ -2,16 +2,16 @@ from "WCH_CH32X035G8U6/WCH_CH32X035G8U6.ato" import WCH_CH32X035G8U6_package
 
 
 module CH32X035G8U6:
-    """MimicX-friendly wrapper around the auto-generated WCH CH32X035G8U6
-    (QFN28) package. Re-exposes signals with short names (PA0, PA1, ...,
-    vdd, vss, usb_dp, usb_dm) so the rest of the design can stay readable.
+    """自動生成 WCH CH32X035G8U6 (QFN28) パッケージの MimicX 用ラッパー。
+    回路本体側で読みやすいよう、短い名前 (PA0, PA1, ..., vdd, vss, usb_dp,
+    usb_dm) に再エクスポートする。
 
-    Pinout per CH32X035 datasheet V1.7 Table 2-1 (QFN28 column).
+    ピン配置は CH32X035 データシート V1.7 Table 2-1 の QFN28 列に準拠。
     """
 
     chip = new WCH_CH32X035G8U6_package
 
-    # ---- power ----
+    # ---- 電源 ----
     signal vdd;     vdd     ~ chip.VDD
     signal vss;     vss     ~ chip.GND
 
@@ -19,7 +19,7 @@ module CH32X035G8U6:
     signal usb_dp;  usb_dp  ~ chip.PC17_UDP_RTS1_TX4_I2C_RX4_T1ET_PC10
     signal usb_dm;  usb_dm  ~ chip.PC16_UDM_T1C4_TX4_I2C_RX4_CTS1_PC11
 
-    # ---- GPIO ports ----
+    # ---- GPIO ポート ----
     signal PA0;  PA0  ~ chip.PA0_T2C1_CTS2_C1P1_A0
     signal PA1;  PA1  ~ chip.PA1_RTS2_T2C2_C1O_O1N2_O2N2_A1
     signal PA2;  PA2  ~ chip.PA2_TX2_T2C3_O2O1_T2ET_A2
@@ -45,5 +45,5 @@ module CH32X035G8U6:
     signal PC3;  PC3  ~ chip.PC3_T1C4_T2C3N_T2C1N_C1N0_A13
     signal PC14; PC14 ~ chip.PC14_CC1_T1C3_T2C2_
     signal PC15; PC15 ~ chip.PC15_CC2_T2C3_T1ET_
-    signal PC18; PC18 ~ chip.PC18_DIO_TX3_T2C1N_T3C2_I2C_T1ET_   # SWD DIO
-    signal PC19; PC19 ~ chip.PC19_DCK_T2C1_T3C1_I2C_RX3_C1P0     # SWD DCK
+    signal PC18; PC18 ~ chip.PC18_DIO_TX3_T2C1N_T3C2_I2C_T1ET_   # SWD DIO (デバッグ書込)
+    signal PC19; PC19 ~ chip.PC19_DCK_T2C1_T3C1_I2C_RX3_C1P0     # SWD DCK (デバッグ書込)

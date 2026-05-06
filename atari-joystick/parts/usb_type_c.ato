@@ -2,30 +2,29 @@ from "Korean_Hroparts_Elec_TYPE_C_31_M_12/Korean_Hroparts_Elec_TYPE_C_31_M_12.at
 
 
 module UsbTypeC_16P:
-    """MimicX wrapper around the auto-generated TYPE-C-31-M-12 (16-pin SMT
-    USB-C receptacle, USB 2.0 only).
+    """自動生成 TYPE-C-31-M-12 (16 ピン SMT USB-C レセプタクル, USB 2.0 のみ)
+    の MimicX 用ラッパー。
 
-    USB 2.0-only operation requires tying A6+B6 (D+) and A7+B7 (D-) so the
-    cable insert orientation does not matter. CC1/CC2 stay independent for
-    UFP role detection.
+    USB 2.0 専用動作のため、ケーブルの挿入向きに依存しないように A6+B6 (D+)
+    と A7+B7 (D-) は内部で短絡する。CC1/CC2 は UFP のロール検出のため独立に
+    残す。
     """
 
     chip = new Korean_Hroparts_Elec_TYPE_C_31_M_12_package
 
-    # Power & shield
+    # 電源とシールド
     signal vbus;  vbus ~ chip.VBUS
     signal gnd;   gnd  ~ chip.GND
-    signal shell; shell ~ chip.EH    # connector shield / housing
+    signal shell; shell ~ chip.EH    # コネクタのシールド / 外殻
 
-    # CC pins (independent — UFP CC pulldowns go on these)
+    # CC ピン (独立 — UFP CC プルダウンはここに接続)
     signal cc1;  cc1 ~ chip.CC1
     signal cc2;  cc2 ~ chip.CC2
 
-    # USB 2.0 D+/D- — tie A-row and B-row pads together for orientation
-    # independence
+    # USB 2.0 D+/D- — A 列と B 列のパッドを短絡して挿入向きに依存させない
     signal dp;  dp ~ chip.DP1; dp ~ chip.DP2
     signal dn;  dn ~ chip.DN1; dn ~ chip.DN2
 
-    # Sideband (unused for USB 2.0 plain)
+    # サイドバンド (USB 2.0 plain では未使用)
     signal sbu1; sbu1 ~ chip.SBU1
     signal sbu2; sbu2 ~ chip.SBU2

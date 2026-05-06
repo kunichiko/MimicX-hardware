@@ -1,0 +1,59 @@
+# VBUS (5V) -> MCU VDD 変換用 3.3V LDO ラッパー。
+#
+# 必須理由:
+#   CH32X035 の USB FS トランシーバの D+/D- 出力電圧は VDD に直結している。
+#   VDD = 5V のままだと D+ アイドルが 5V となり USB 規格 (VOH max ≈ 3.6V) を
+#   逸脱し、Android (Pixel など仕様準拠の厳格なホスト) で enumerate されない。
+#   iPhone / Mac は寛容なので VDD = 5V でも通ってしまうため気付きにくいので注意。
+#   そのため USB 用途では必ず 3.3V LDO を経由させる。詳細は docs/CH32X035.md 参照。
+#
+# 部品: TECH PUBLIC LP5907MFX-3.3 (TI LP5907MFX-3.3 の互換セカンドソース)
+#   - 250mA, 低ノイズ, ドロップアウト 120mV, SOT-23-5
+#   - LCSC: C23380874
+#   - ピン互換: VIN=1, GND=2, EN=3, NC=4, VOUT=5 (TI LP5907 と同じ)
+#
+# 純正 TI を使う場合は LCSC C76858 (LP5907MFX-3.3/NOPB) を install すれば
+# 同じピン配置で差し替え可能。
+
+from "TECH_PUBLIC_LP5907MFX_3_3/TECH_PUBLIC_LP5907MFX_3_3.ato" import TECH_PUBLIC_LP5907MFX_3_3_package
+
+import ElectricPower
+import Capacitor
+
+
+module Ldo3V3:
+    """LP5907MFX-3.3 を中心とした 5V -> 3.3V 電源ブロック。
+    入力 (`power_in`) と出力 (`power_out`) の両端に推奨デカップリングを実装。
+
+    使用例:
+        ldo = new Ldo3V3
+        ldo.power_in  ~ vbus
+        ldo.power_out ~ vdd33
+    """
+
+    chip = new TECH_PUBLIC_LP5907MFX_3_3_package
+
+    power_in  = new ElectricPower
+    power_out = new ElectricPower
+
+    # 共通 GND
+    power_out.lv ~ power_in.lv
+
+    # LP5907 SOT-23-5 標準ピン名は datasheet/auto-gen package 側で
+    # VIN / GND / EN / NC / VOUT として公開される想定。
+    chip.VIN  ~ power_in.hv
+    chip.GND  ~ power_in.lv
+    chip.EN   ~ power_in.hv      # 常時 ON (EN を VIN に直結)
+    chip.VOUT ~ power_out.hv
+
+    # ===== 入力デカップリング (1µF X7R 推奨, データシート Fig. 35) =====
+    cin = new Capacitor
+    cin.capacitance = 1uF +/- 20%
+    cin.package = "I0402"
+    cin.power ~ power_in
+
+    # ===== 出力デカップリング (1µF X7R 必須, ESR 安定動作のため) =====
+    cout = new Capacitor
+    cout.capacitance = 1uF +/- 20%
+    cout.package = "I0402"
+    cout.power ~ power_out

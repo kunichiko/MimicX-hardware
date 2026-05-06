@@ -3,8 +3,8 @@ from "Hubei_KENTO_Elec_KT_0603R/Hubei_KENTO_Elec_KT_0603R.ato" import Hubei_KENT
 
 
 module LedGreen0603:
-    """Green 0603 LED — Everlight 19-217/GHC-YR1S2/3T (LCSC C72043).
-    Exposes uniform `anode` / `cathode` signals."""
+    """緑 0603 LED — Everlight 19-217/GHC-YR1S2/3T (LCSC C72043)。
+    `anode` / `cathode` の統一インターフェースで公開する。"""
 
     chip = new Everlight_Elec_19_217_GHC_YR1S2_3T_package
     signal anode;   anode   ~ chip.A
@@ -12,8 +12,8 @@ module LedGreen0603:
 
 
 module LedRed0603:
-    """Red 0603 LED — Hubei KENTO KT-0603R (LCSC C2286).
-    Exposes uniform `anode` / `cathode` signals."""
+    """赤 0603 LED — Hubei KENTO KT-0603R (LCSC C2286)。
+    `anode` / `cathode` の統一インターフェースで公開する。"""
 
     chip = new Hubei_KENTO_Elec_KT_0603R_package
     signal anode;   anode   ~ chip.A
