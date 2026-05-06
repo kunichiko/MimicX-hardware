@@ -5,6 +5,10 @@
 *-backups/
 fp-info-cache
 *.kicad_prl
+*.lck
+
+# VS Code Local History extension
+.history/
 
 # Gerber output
 gerber/
@@ -18,3 +22,7 @@ fabrication/
 
 # macOS
 .DS_Store
+
+# atopile
+build/
+.ato/
