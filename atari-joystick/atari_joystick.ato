@@ -82,7 +82,7 @@ module AtariJoystick:
     cdec.package = "I0402"
     cdec.power ~ vdd33
 
-    # ===== デバッグ LED (PB3 = 緑, PB4 = 赤) — アクティブ Low =====
+    # ===== デバッグ LED (PB11 = 緑, PB12 = 赤) — アクティブ Low =====
     # VDD33 -> LED アノード -> カソード -> R -> MCU ピン (MCU 側で吸い込んで点灯)。
     # VDD33 = 3.3V, Vf ≈ 2.0V (緑) / 1.8V (赤) のため、約 2.6〜3 mA を狙って 470Ω に設定。
     led0 = new LedGreen0603
@@ -90,14 +90,14 @@ module AtariJoystick:
     rled0.resistance = 470ohm +/- 5%
     rled0.package = "I0402"
     vdd33.hv ~ led0.anode
-    led0.cathode ~> rled0 ~> mcu.PB3
+    led0.cathode ~> rled0 ~> mcu.PB11
 
     led1 = new LedRed0603
     rled1 = new Resistor
     rled1.resistance = 470ohm +/- 5%
     rled1.package = "I0402"
     vdd33.hv ~ led1.anode
-    led1.cathode ~> rled1 ~> mcu.PB4
+    led1.cathode ~> rled1 ~> mcu.PB12
 
     # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
     # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
@@ -120,11 +120,11 @@ module AtariJoystick:
     # 方向 / トリガ線はファーム側で擬似 open-drain (GPIO_CNF_OUT_OD)。
     # プルアップはホスト (X68000 / MD) 側が用意する。
     mcu.PA7 ~ joy.up
-    mcu.PA4 ~ joy.down
-    mcu.PA2 ~ joy.left
-    mcu.PA1 ~ joy.right
+    mcu.PA5 ~ joy.down
+    mcu.PA3 ~ joy.left
+    mcu.PA2 ~ joy.right
     mcu.PA6 ~ joy.triga
-    mcu.PA3 ~ joy.trigb
+    mcu.PA4 ~ joy.trigb
 
     # COMMON / TH (ホストからの入力) — MD 6 ボタンの MUX 切替検出を TIM2_CH1 で実施。
     # TODO: このピンに 100Ω 直列抵抗 + TVS クランプによる ESD 保護を追加する。
