@@ -1,0 +1,38 @@
+# Mini DIN 7pin オスコネクタ (X68000 キーボード端子) — アトミック部品定義
+#
+# 自作部品。手配したコネクタを直接基板にはんだ付けする想定。フットプリント /
+# シンボル / 3D モデルは本ディレクトリ内で完結し、KiCad Footprint Editor から
+# `MiniDIN_7P_X68000` ライブラリとして直接編集できる (`fp-lib-table` には
+# atopile が自動登録)。
+#
+# 現状はパッド配置のみ仮置き。コネクタ実寸 (リードピッチ / スルーホール径 /
+# シェル爪位置) を反映する作業は KiCad 側で行う。
+#
+# ピン番号と信号の対応 (X68000 サービスマニュアル準拠):
+#   1: Vcc2 (+5V)         5: READY
+#   2: MSDATA              6: REMOTE
+#   3: KEY RxD             7: GND
+#   4: KEY TxD
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component MiniDIN_7P_X68000_package:
+    """X68000 キーボード / マウス用 Mini DIN 7pin **オス** コネクタ。"""
+
+    trait is_atomic_part<manufacturer="GENERIC", partnumber="MiniDIN_7P_X68000", footprint="MiniDIN_7P_X68000.kicad_mod", symbol="MiniDIN_7P_X68000.kicad_sym", model="MiniDIN_7P_X68000.step">
+    # 手配コネクタ前提で BOM ピッカーをスキップさせるためのダミー LCSC 番号。
+    # 実部品アサインは BOM 側で手動差し替えする想定。
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C0000000", manufacturer="GENERIC", partno="MiniDIN_7P_X68000">
+    trait has_designator_prefix<prefix="J">
+
+    # ---- 信号ピン (X68000 サービスマニュアル番号) ----
+    signal P1 ~ pin 1    # Vcc2 (+5V)
+    signal P2 ~ pin 2    # MSDATA
+    signal P3 ~ pin 3    # KEY RxD
+    signal P4 ~ pin 4    # KEY TxD
+    signal P5 ~ pin 5    # READY
+    signal P6 ~ pin 6    # REMOTE
+    signal P7 ~ pin 7    # GND

@@ -133,4 +133,11 @@
 		(options "")
 		(descr "atopile: part lib: YAGEO_RC0603FR_0791KL")
 	)
+	(lib
+		(name "MiniDIN_7P_X68000")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/MiniDIN_7P_X68000")
+		(options "")
+		(descr "atopile: part lib: MiniDIN_7P_X68000")
+	)
 )

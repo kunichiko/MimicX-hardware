@@ -1,65 +1,22 @@
-# Mini DIN 7pin オスコネクタ (X68000 キーボード端子)
+# Mini DIN 7pin オスコネクタ (X68000 キーボード端子) — ラッパーモジュール
 #
-# このファイルは手書きの**プレースホルダ**スキャフォールド。実際のフットプリント
-# / シンボル / 3D モデルはユーザ手配のコネクタに合わせて KiCad 側で差し替える。
-# `MiniDIN-7P_PLACEHOLDER.kicad_mod` という名前で参照しているので、KiCad
-# プロジェクト側で同名のダミーフットプリントを用意するか、`is_atomic_part`
-# トレイトを編集して差し替えること。
-#
-# ピン配置 (X68000 サービスマニュアル準拠、プラグ外側から見た図):
-#
-#        _______
-#       /  4 3  \
-#      | 7  6  5 |
-#       \_2 1__/
-#
-# 信号割当:
-#   1: Vcc2 (+5V)         5: READY
-#   2: MSDATA              6: REMOTE
-#   3: KEY RxD             7: GND
-#   4: KEY TxD
+# アトミック部品は `parts/MiniDIN_7P_X68000/MiniDIN_7P_X68000.ato`。本ファイルは
+# それを機能名 (vcc2 / msdata / key_rxd / key_txd / ready / remote / gnd /
+# shield) で公開する MimicX 用ラッパー。`level_shifter.ato` ↔ `TOSHIBA_...EL/`
+# と同じパターン。
 
-import has_designator_prefix
-import has_part_picked
-import is_atomic_part
-
-
-component MiniDin7Male_package:
-    """X68000 キーボード / マウス用 Mini DIN 7pin **オス** コネクタの
-    プレースホルダ。実部品 (型番・フットプリント) は基板実装時に確定する。"""
-
-    trait is_atomic_part<manufacturer="GENERIC", partnumber="MiniDIN-7P-PLACEHOLDER", footprint="MiniDIN-7P_PLACEHOLDER.kicad_mod", symbol="MiniDIN-7P_PLACEHOLDER.kicad_sym", model="MiniDIN-7P_PLACEHOLDER.step">
-    # 手配コネクタ前提で BOM ピッカーをスキップさせるためのダミー。
-    # supplier_id は atopile が "lcsc" 固定で検証するため、ここも lcsc を指定。
-    # C0000000 は存在しない LCSC 番号で、実部品アサインは KiCad / BOM 側で
-    # 手動で差し替える想定 (フットプリント差し替えと同じ流れ)。
-    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C0000000", manufacturer="GENERIC", partno="MiniDIN-7P-PLACEHOLDER">
-    trait has_designator_prefix<prefix="J">
-
-    # ---- 信号ピン (X68000 サービスマニュアル番号) ----
-    signal P1 ~ pin 1    # Vcc2 (+5V)
-    signal P2 ~ pin 2    # MSDATA
-    signal P3 ~ pin 3    # KEY RxD
-    signal P4 ~ pin 4    # KEY TxD
-    signal P5 ~ pin 5    # READY
-    signal P6 ~ pin 6    # REMOTE
-    signal P7 ~ pin 7    # GND
-
-    # ---- シェル (シールド端子) ----
-    # ダミーフットプリントの実際のピン番号に合わせて KiCad 側で再割当する想定。
-    # ここでは pin 8 をシールド固定金具用に予約。
-    signal SHIELD ~ pin 8
+from "MiniDIN_7P_X68000/MiniDIN_7P_X68000.ato" import MiniDIN_7P_X68000_package
 
 
 module MiniDin7Male:
     """Mini DIN 7pin オスコネクタの MimicX 用ラッパー。
 
     `chip` を内包し、X68000 サービスマニュアルのピンアサインに沿った
-    機能名 (vcc2 / msdata / key_rxd / key_txd / ready / remote / gnd / shield)
+    機能名 (vcc2 / msdata / key_rxd / key_txd / ready / remote / gnd)
     で公開する。
     """
 
-    chip = new MiniDin7Male_package
+    chip = new MiniDIN_7P_X68000_package
 
     signal vcc2;    vcc2    ~ chip.P1
     signal msdata;  msdata  ~ chip.P2
@@ -68,4 +25,3 @@ module MiniDin7Male:
     signal ready;   ready   ~ chip.P5
     signal remote;  remote  ~ chip.P6
     signal gnd;     gnd     ~ chip.P7
-    signal shield;  shield  ~ chip.SHIELD

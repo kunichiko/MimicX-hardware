@@ -8,8 +8,6 @@ import has_net_name
 from "parts/ch32x035.ato" import CH32X035G8U6
 from "parts/usb_type_c.ato" import UsbTypeC_16P
 from "parts/mini_din7.ato" import MiniDin7Male
-from "parts/leds.ato" import LedGreen0603
-from "parts/leds.ato" import LedRed0603
 from "parts/buttons.ato" import TactSwitch_2P
 from "parts/ldo_3v3.ato" import Ldo3V3
 from "parts/level_shifter.ato" import LevelShifter8Bit
@@ -87,22 +85,9 @@ module X68000Keyboard:
     cdec.package = "I0402"
     cdec.power ~ vdd33
 
-    # ===== デバッグ LED (PB3 = 緑, PB4 = 赤) — アクティブ Low =====
-    # VDD33 -> LED アノード -> カソード -> R -> MCU ピン (MCU 側で吸い込んで点灯)。
-    # VDD33 = 3.3V, Vf ≈ 2.0V (緑) / 1.8V (赤) のため、約 2.6〜3 mA を狙って 470Ω に設定。
-    led0 = new LedGreen0603
-    rled0 = new Resistor
-    rled0.resistance = 470ohm +/- 5%
-    rled0.package = "I0402"
-    vdd33.hv ~ led0.anode
-    led0.cathode ~> rled0 ~> mcu.PB3
-
-    led1 = new LedRed0603
-    rled1 = new Resistor
-    rled1.resistance = 470ohm +/- 5%
-    rled1.package = "I0402"
-    vdd33.hv ~ led1.anode
-    led1.cathode ~> rled1 ~> mcu.PB4
+    # ===== デバッグ LED は実装しない (基板小型化のため省略) =====
+    # PB3 / PB4 は未使用ピンとして残しておく。将来的な拡張で必要なら
+    # この位置に LedGreen0603 / LedRed0603 + 470Ω 直列抵抗を再挿入する。
 
     # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
     # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
@@ -159,10 +144,6 @@ module X68000Keyboard:
 
     # ホストと共通 GND
     kbd.gnd ~ vbus.lv
-
-    # シールド端子は GND に落とす (ケーブルシールド経由のリターン)。
-    # ノイズ対策で 0Ω やフェライトビーズを経由したい場合は後付けで分離可能。
-    kbd.shield ~ vbus.lv
 
     # Pin 1 (Vcc2 = ホスト +5V): 既定では NC。基板上の電源は USB バスパワー
     # から取得する (案 A)。VBUS と Vcc2 を同時通電させると逆流リスクがある

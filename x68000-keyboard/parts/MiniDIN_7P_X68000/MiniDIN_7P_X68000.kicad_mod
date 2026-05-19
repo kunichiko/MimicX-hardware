@@ -1,12 +1,12 @@
-(footprint "MiniDIN-7P_PLACEHOLDER"
+(footprint "MiniDIN_7P_X68000"
 	(version 20241229)
 	(generator "manual_placeholder")
 	(generator_version "v1")
 	(layer "F.Cu")
 	(tedit "00000000")
 	(uuid "00000000-0000-0000-0000-000000000001")
-	(descr "Mini DIN 7pin placeholder — replace with real footprint in KiCad")
-	(tags "mini-din 7pin placeholder x68000")
+	(descr "Mini DIN 7pin male connector for X68000 keyboard port (custom)")
+	(tags "mini-din 7pin x68000")
 	(property "Reference" "J**"
 		(at 0 -10)
 		(layer "F.SilkS")
@@ -18,7 +18,7 @@
 			)
 		)
 	)
-	(property "Value" "MiniDIN-7P_PLACEHOLDER"
+	(property "Value" "MiniDIN_7P_X68000"
 		(at 0 10)
 		(layer "F.Fab")
 		(uuid "00000000-0000-0000-0000-000000000003")
@@ -78,12 +78,5 @@
 		(drill 0.8)
 		(layers "*.Cu" "*.Mask")
 		(uuid "00000000-0000-0000-0000-000000000107")
-	)
-	(pad "8" thru_hole circle
-		(at -5 4)
-		(size 2 2)
-		(drill 1.2)
-		(layers "*.Cu" "*.Mask")
-		(uuid "00000000-0000-0000-0000-000000000108")
 	)
 )

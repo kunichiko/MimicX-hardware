@@ -1,7 +1,7 @@
 (kicad_symbol_lib
 	(version 20241229)
 	(generator "manual_placeholder")
-	(symbol "MiniDIN-7P_PLACEHOLDER"
+	(symbol "MiniDIN_7P_X68000"
 		(property "Reference" "J"
 			(id 0)
 			(at 0 12.7 0)
@@ -11,7 +11,7 @@
 				)
 			)
 		)
-		(property "Value" "MiniDIN-7P_PLACEHOLDER"
+		(property "Value" "MiniDIN_7P_X68000"
 			(id 1)
 			(at 0 -12.7 0)
 			(effects
@@ -20,7 +20,7 @@
 				)
 			)
 		)
-		(property "Footprint" "MiniDIN-7P_PLACEHOLDER"
+		(property "Footprint" "MiniDIN_7P_X68000"
 			(id 2)
 			(at 0 -15.24 0)
 			(effects
@@ -40,7 +40,7 @@
 				(hide yes)
 			)
 		)
-		(symbol "MiniDIN-7P_PLACEHOLDER_0_1"
+		(symbol "MiniDIN_7P_X68000_0_1"
 			(rectangle
 				(start -7.62 10.16)
 				(end 7.62 -10.16)
@@ -53,7 +53,7 @@
 				)
 			)
 		)
-		(symbol "MiniDIN-7P_PLACEHOLDER_1_1"
+		(symbol "MiniDIN_7P_X68000_1_1"
 			(pin passive line
 				(at -10.16 7.62 0)
 				(length 2.54)
@@ -95,12 +95,6 @@
 				(length 2.54)
 				(name "P7" (effects (font (size 1.27 1.27))))
 				(number "7" (effects (font (size 1.27 1.27))))
-			)
-			(pin passive line
-				(at 10.16 0 180)
-				(length 2.54)
-				(name "SHIELD" (effects (font (size 1.27 1.27))))
-				(number "8" (effects (font (size 1.27 1.27))))
 			)
 		)
 	)

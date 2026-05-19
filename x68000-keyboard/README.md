@@ -20,8 +20,11 @@ X68000 のキーボードコネクタは **マウス端子を兼用** してお�
 | 出力コネクタ | Mini DIN 7pin オス | X68000 キーボード端子 (現状はプレースホルダ部品で実装) |
 | LDO | LP5907MFX-3.3 (250 mA) | VBUS 5V → MCU VDD 3.3V |
 | レベルシフタ | Toshiba TC7MPB9307FT (TSSOP-20) | 8-bit Dual-Supply Bus Switch、3.3V↔5V |
-| LED | チップ LED (0603) ×2 | デバッグ用 (PB3, PB4) |
-| その他 | デカップリング 0.1µF / 4.7µF, USB Type-C CC 抵抗 5.1kΩ ×2, BOOT ボタン |
+| BOOT ボタン | XUNPU TS-1088-AR02016 (3.9×3.0mm, 2 ピン) | リセット時 USB DFU 起動用 |
+| その他 | デカップリング 0.1µF / 4.7µF, USB Type-C CC 抵抗 5.1kΩ ×2 |
+
+> 基板を小型化するため、デバッグ LED は実装していない (PB3 / PB4 は未使用)。
+> 必要であれば atari-joystick と同様に VDD33 → LED → 470Ω → MCU ピンで後付け可能。
 
 ## ピン割当 (CH32X035G8U6 QFN28 → コネクタ)
 
@@ -37,8 +40,8 @@ X68000 のキーボードコネクタは **マウス端子を兼用** してお�
 | 23 | PB12 (GPIO 入力) | a3↔b3 | Pin 5 (READY) | IN | 1=ホスト準備完了、Low 時送信抑止 |
 | 20 | PB9 (USART4_TX, TX4_3) | a4↔b4 | Pin 2 (MSDATA) | OUT | マウスデータ送信 (4800/8N2) |
 | 19 | PB8 (GPIO) | a5↔b5 | Pin 6 (REMOTE) | (FW 依存) | TV リモコン信号。用途は将来検討 |
-| 14 | PB3 | — | — | OUT | Debug LED 0 (緑) |
-| 15 | PB4 | — | — | OUT | Debug LED 1 (赤) |
+| 14 | PB3 | — | — | — | 未使用 (基板小型化で LED 省略) |
+| 15 | PB4 | — | — | — | 未使用 (基板小型化で LED 省略) |
 | —  | (GND) | — | Pin 7 | — | 共通 GND |
 | —  | (NC) | — | Pin 1 (Vcc2 +5V) | — | 既定では NC (USB バスパワー駆動) |
 
