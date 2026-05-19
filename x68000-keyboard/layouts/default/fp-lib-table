@@ -50,13 +50,6 @@
 		(descr "atopile: part lib: TECH_PUBLIC_LP5907MFX_3_3")
 	)
 	(lib
-		(name "Toshiba_TC7MPB9307FT")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/Toshiba_TC7MPB9307FT")
-		(options "")
-		(descr "atopile: part lib: Toshiba_TC7MPB9307FT")
-	)
-	(lib
 		(name "UNI_ROYAL_0402WGF1001TCE")
 		(type "KiCad")
 		(uri "${KIPRJMOD}/../../parts/UNI_ROYAL_0402WGF1001TCE")
@@ -118,20 +111,6 @@
 		(uri "${KIPRJMOD}/../../parts/XUNPU_TS_1088_AR02016")
 		(options "")
 		(descr "atopile: part lib: XUNPU_TS_1088_AR02016")
-	)
-	(lib
-		(name "XKB_Connectivity_TS_1187A_C_6_0_B")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/XKB_Connectivity_TS_1187A_C_6_0_B")
-		(options "")
-		(descr "atopile: part lib: XKB_Connectivity_TS_1187A_C_6_0_B")
-	)
-	(lib
-		(name "YAGEO_RC0603FR_0791KL")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/YAGEO_RC0603FR_0791KL")
-		(options "")
-		(descr "atopile: part lib: YAGEO_RC0603FR_0791KL")
 	)
 	(lib
 		(name "MiniDIN_7P_X68000")
