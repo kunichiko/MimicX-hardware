@@ -12,16 +12,18 @@ from "parts/leds.ato" import LedGreen0603
 from "parts/leds.ato" import LedRed0603
 from "parts/buttons.ato" import TactSwitch_4P
 from "parts/ldo_3v3.ato" import Ldo3V3
+from "parts/level_shifter.ato" import LevelShifter8Bit
 
 
 module AtariJoystick:
     """
     Mimic X — ATARI ジョイスティックアダプタ。
 
-    USB Type-C (sink/UFP)  ──>  CH32X035G8U6 (MCU, USB FS)  ──>  D-SUB 9pin
-    X68000 (ATARI 標準) ジョイスティックポートに対応。
+    USB Type-C (sink/UFP)  ──>  CH32X035G8U6 (MCU, USB FS, 3.3V)
+                                       ↕  TC7MPB9307FT (5V↔3.3V level shifter)
+                              ──>  D-SUB 9pin (X68000 / ATARI 標準, 5V)
 
-    ピン割当・設計理由は README.md を参照。
+    ピン割当・設計理由は README.md と docs/CH32X035.md を参照。
     """
 
     # ===== トップレベル電源レール =====
@@ -42,6 +44,7 @@ module AtariJoystick:
     usbc = new UsbTypeC_16P
     joy  = new DSub9Female
     ldo  = new Ldo3V3
+    lvls = new LevelShifter8Bit    # 5V <-> 3.3V レベルシフタ (TC7MPB9307FT)
 
     # ===== USB Type-C: 5.1kΩ CC プルダウン (UFP / sink) =====
     rcc1 = new Resistor
@@ -116,19 +119,40 @@ module AtariJoystick:
     vdd33.hv ~ boot_btn.terminal_a
     boot_btn.terminal_b ~> rboot ~> mcu.usb_dp
 
-    # ===== D-SUB 9pin ジョイスティック出力 (ATARI / X68000 標準) =====
-    # 方向 / トリガ線はファーム側で擬似 open-drain (GPIO_CNF_OUT_OD)。
-    # プルアップはホスト (X68000 / MD) 側が用意する。
-    mcu.PA7 ~ joy.up
-    mcu.PA5 ~ joy.down
-    mcu.PA3 ~ joy.left
-    mcu.PA2 ~ joy.right
-    mcu.PA6 ~ joy.triga
-    mcu.PA4 ~ joy.trigb
+    # ===== レベルシフタ (TC7MPB9307FT) — MCU 3.3V 側 と D-SUB 5V 側を分離 =====
+    # 重要: CH32X035 は 5V トレラントでない (絶対最大定格 VIN ≤ VDD+0.3V =
+    # 3.6V at VDD=3.3V)。X68000 側の 5V 信号 (8255 push-pull の COMMON、
+    # 方向/トリガ線のホスト側プルアップ 5V) と直結すると MCU ピンが定格を
+    # 超え破損する。TC7MPB9307FT (パッシブ FET バススイッチ) で A=VDD33 /
+    # B=VBUS に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
+    # 8 チャネル中 7 ch を使用、a8/b8 は予備 (a8 を GND に固定)。
+    lvls.power_a ~ vdd33    # A 側 = MCU の 3.3V
+    lvls.power_b ~ vbus     # B 側 = X68000 の 5V
 
-    # COMMON / TH (ホストからの入力) — MD 6 ボタンの MUX 切替検出を TIM2_CH1 で実施。
-    # TODO: このピンに 100Ω 直列抵抗 + TVS クランプによる ESD 保護を追加する。
-    mcu.PA0 ~ joy.common
+    # ===== D-SUB 9pin ジョイスティック出力 (ATARI / X68000 標準) =====
+    # 方向/トリガ線: 8255 入力 + ホスト側プルアップ 5V に対する open-drain 動作。
+    # MCU は通常の push-pull で 0V/3.3V を駆動するだけで OK。バススイッチ経由で
+    #   MCU=0V → 5V 側 0V (FET ON で引き下げ)
+    #   MCU=3.3V → 5V 側はホストのプルアップで 5V に復元 (FET 自動 OFF)
+    # となり、ホスト側から見ると従来の open-drain ポートと同じ振る舞いになる。
+    mcu.PA7 ~ lvls.a1;  lvls.b1 ~ joy.up
+    mcu.PA5 ~ lvls.a2;  lvls.b2 ~ joy.down
+    mcu.PA3 ~ lvls.a3;  lvls.b3 ~ joy.left
+    mcu.PA2 ~ lvls.a4;  lvls.b4 ~ joy.right
+    mcu.PA6 ~ lvls.a5;  lvls.b5 ~ joy.triga
+    mcu.PA4 ~ lvls.a6;  lvls.b6 ~ joy.trigb
+
+    # COMMON / TH (ホスト 8255 push-pull 出力 → MCU 入力) — MD 6 ボタンの MUX
+    # 切替検出を TIM2_CH1 で実施。バススイッチ経由で MCU には 0V/3.3V クランプ
+    # 済みの信号が届くため、CH32X035 の絶対最大定格を満たしたまま受けられる。
+    mcu.PA0 ~ lvls.a7;  lvls.b7 ~ joy.common
+
+    # 予備チャネル (Ch.8) — A 側を GND に落としてフローティング回避
+    lvls.a8 ~ vdd33.lv
+
+    # TODO: D-SUB 各ピン (lvls.b1〜b7 と joy 側の間) に TVS ダイオードアレイ
+    # (例: SP3012-04UTG, PESD5V0S4UD など) を追加して ESD 保護を強化する。
+    # 特に COMMON は外部ケーブル経由でホスト 8255 に直結するため重要。
 
     # ホストと共通 GND
     joy.gnd ~ vbus.lv

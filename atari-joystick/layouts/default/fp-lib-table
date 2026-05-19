@@ -105,4 +105,18 @@
 		(options "")
 		(descr "atopile: part lib: UNI_ROYAL_0402WGF4700TCE")
 	)
+	(lib
+		(name "TOSHIBA_TC7MPB9307FT_EL")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/TOSHIBA_TC7MPB9307FT_EL")
+		(options "")
+		(descr "atopile: part lib: TOSHIBA_TC7MPB9307FT_EL")
+	)
+	(lib
+		(name "Toshiba_TC7MPB9307FT")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/Toshiba_TC7MPB9307FT")
+		(options "")
+		(descr "atopile: part lib: Toshiba_TC7MPB9307FT")
+	)
 )

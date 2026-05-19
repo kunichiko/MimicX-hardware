@@ -25,12 +25,12 @@ Mimic X — ATARI 仕様ジョイスティックアダプタ基板
 | MCU ピン | 信号 | D-SUB 9pin | 機能 |
 |---------|------|-----------|------|
 | PA0     | COMMON / TH (TIM2_CH1) | Pin 8 | MD 6B 切替検出 (input capture + DMA) |
-| PA1     | Up   | Pin 1 | アクティブ Low (open-drain 推奨) |
-| PA2     | Down | Pin 2 | 同上 |
+| PA7     | Up   | Pin 1 | アクティブ Low (open-drain 推奨) |
+| PA5     | Down | Pin 2 | 同上 |
 | PA3     | Left | Pin 3 | 同上 |
-| PA4     | Right | Pin 4 | 同上 |
+| PA2     | Right | Pin 4 | 同上 |
 | PA6     | TRIG-A | Pin 6 | 同上 |
-| PA7     | TRIG-B | Pin 7 | 同上 |
+| PA4     | TRIG-B | Pin 7 | 同上 |
 | PB3     | Debug LED 0 | — | (基板上、緑/赤) |
 | PB4     | Debug LED 1 | — | (基板上、緑/赤) |
 | —       | GND  | Pin 9 | ホスト側と共通 |

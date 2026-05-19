@@ -3,6 +3,7 @@
 *.bck
 *~
 *-backups/
+*.kicad_pcb.backup-*
 fp-info-cache
 *.kicad_prl
 *.lck
@@ -26,3 +27,6 @@ fabrication/
 # atopile
 build/
 .ato/
+
+# Claude Code (local settings, host-specific permissions)
+.claude/

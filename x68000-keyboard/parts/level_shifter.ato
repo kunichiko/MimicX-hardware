@@ -1,0 +1,81 @@
+# 5V <-> 3.3V レベルシフタ。
+#
+# CH32X035 は 5V トレラントではないため (絶対最大定格 VIN ≤ VDD+0.3V =
+# 3.6V at VDD=3.3V)、X68000 ホスト側の 5V 信号と直接接続するとピン破損の
+# リスクがある。詳細は docs/CH32X035.md 参照。
+#
+# 採用部品: Toshiba TC7MPB9307FT (8 ビット Dual-Supply バススイッチ)
+#   - パッシブ NMOS パススルー方式 (TI CB3T 系と同類)
+#   - VCCA 1.65–5V / VCCB 2.3–5.5V、Ron ≈ 5Ω
+#   - **オープンドレインも push-pull も双方向で透過** — TXB0108 / FXMA108
+#     のようなアクティブ駆動型と違い、X68000 ジョイスティックの
+#     ワイヤード OR バス (5V プルアップ) でも誤動作しない
+#   - LCSC C2675018, TSSOP-20
+
+import ElectricPower
+import Capacitor
+
+from "TOSHIBA_TC7MPB9307FT_EL/TOSHIBA_TC7MPB9307FT_EL.ato" import TOSHIBA_TC7MPB9307FT_EL_package
+
+
+module LevelShifter8Bit:
+    """8 ビット双方向 Dual-Supply レベルシフタ (TC7MPB9307FT)。
+
+    `power_a` (低電圧側、例 3.3V) と `power_b` (高電圧側、例 5V) を別々の
+    レールから供給する。全 8 チャネルがオートセンスで双方向動作する
+    (DIR ピン制御不要)。OE は内部で常時 LOW 接続 (バススイッチ常時 ON)。
+
+    使用例:
+        ls = new LevelShifter8Bit
+        ls.power_a ~ vdd33   # MCU 側 3.3V
+        ls.power_b ~ vbus    # ホスト側 5V
+        ls.a1 ~ mcu.PA7      # 3.3V 側 ↔
+        ls.b1 ~ joy.up       #          5V 側
+    """
+
+    chip = new TOSHIBA_TC7MPB9307FT_EL_package
+
+    power_a = new ElectricPower    # 低電圧側 (例: 3.3V VCCA)
+    power_b = new ElectricPower    # 高電圧側 (例: 5V  VCCB)
+
+    # 共通 GND
+    power_a.lv ~ power_b.lv
+
+    # 電源
+    chip.VCCA ~ power_a.hv
+    chip.VCCB ~ power_b.hv
+    chip.GND  ~ power_a.lv
+
+    # nOE = 常時 LOW (active-low、スイッチ常時 ON)
+    chip.nOE ~ power_a.lv
+
+    # ---- 8 チャネル (A 側: 低電圧) ----
+    signal a1; a1 ~ chip.A1
+    signal a2; a2 ~ chip.A2
+    signal a3; a3 ~ chip.A3
+    signal a4; a4 ~ chip.A4
+    signal a5; a5 ~ chip.A5
+    signal a6; a6 ~ chip.A6
+    signal a7; a7 ~ chip.A7
+    signal a8; a8 ~ chip.A8
+
+    # ---- 8 チャネル (B 側: 高電圧) ----
+    signal b1; b1 ~ chip.B1
+    signal b2; b2 ~ chip.B2
+    signal b3; b3 ~ chip.B3
+    signal b4; b4 ~ chip.B4
+    signal b5; b5 ~ chip.B5
+    signal b6; b6 ~ chip.B6
+    signal b7; b7 ~ chip.B7
+    signal b8; b8 ~ chip.B8
+
+    # ---- デカップリング (各電源ピン直近に 100nF) ----
+    cdec_a = new Capacitor
+    cdec_a.capacitance = 100nF +/- 10%
+    cdec_a.package = "I0402"
+    cdec_a.power ~ power_a
+
+    cdec_b = new Capacitor
+    cdec_b.capacitance = 100nF +/- 10%
+    cdec_b.package = "I0402"
+    cdec_b.power ~ power_b

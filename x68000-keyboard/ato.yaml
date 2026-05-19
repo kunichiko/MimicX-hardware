@@ -1,0 +1,9 @@
+requires-atopile: "0.15.7"
+
+paths:
+  src: ./
+  layout: ./layouts
+
+builds:
+  default:
+    entry: x68000_keyboard.ato:X68000Keyboard

@@ -1,0 +1,21 @@
+import has_datasheet
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+import is_auto_generated
+
+component TECH_PUBLIC_LP5907MFX_3_3_package:
+    # This trait marks this file as auto-generated
+    # If you want to manually change it, remove the trait
+    trait is_auto_generated<system="ato_part", source="easyeda:C23380874", date="2026-05-06T05:51:59.005247+00:00", checksum="fda73168520e7238b1104ccd65eee1af54c44c5e9086c9227cb82e32ae76a48f">
+
+    trait is_atomic_part<manufacturer="TECH PUBLIC", partnumber="LP5907MFX-3.3", footprint="SOT-23-5_L3.0-W1.7-P0.95-LS2.8-BR.kicad_mod", symbol="LP5907MFX-3.3.kicad_sym", model="SOT-23-5_L2.9-W1.6-H1.1-LS2.8-P0.95.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C23380874", manufacturer="TECH PUBLIC", partno="LP5907MFX-3.3">
+    trait has_designator_prefix<prefix="U">
+    trait has_datasheet<datasheet="https://www.lcsc.com/datasheet/lcsc_datasheet_2406281354_TECH-PUBLIC-LP5907MFX-3-3_C23380874.pdf">
+
+    # pins
+    signal EN ~ pin 3
+    signal GND ~ pin 2
+    signal VIN ~ pin 1
+    signal VOUT ~ pin 5
