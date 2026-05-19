@@ -46,16 +46,23 @@ module AtariJoystick:
     ldo  = new Ldo3V3
     lvls = new LevelShifter8Bit    # 5V <-> 3.3V レベルシフタ (TC7MPB9307FT)
 
-    # ===== USB Type-C: 5.1kΩ CC プルダウン (UFP / sink) =====
+    # ===== USB Type-C: 5.1kΩ CC プルダウン (UFP / sink) + MCU PD 検出 =====
+    # 5.1kΩ プルダウンは UFP/sink 識別用 (USB Type-C 仕様の Rd)。加えて
+    # CH32X035 の内蔵 USB-PD コントローラが CC ラインを直接サンプリングできる
+    # よう、PC14 (CC1) / PC15 (CC2) を CC ネットに直接接続する。プルダウン経由で
+    # 5V 系の Rp 分圧 (max ~1.7V @ 3A 広告) しか印加されないため、MCU の絶対
+    # 最大定格 (VDD+0.3V = 3.6V) は満たされる。
     rcc1 = new Resistor
     rcc1.resistance = 5.1kohm +/- 5%
     rcc1.package = "I0402"
     usbc.cc1 ~> rcc1 ~> vbus.lv
+    mcu.PC14 ~ usbc.cc1
 
     rcc2 = new Resistor
     rcc2.resistance = 5.1kohm +/- 5%
     rcc2.package = "I0402"
     usbc.cc2 ~> rcc2 ~> vbus.lv
+    mcu.PC15 ~ usbc.cc2
 
     # ===== USB 電源とデータ =====
     usbc.vbus ~ vbus.hv
