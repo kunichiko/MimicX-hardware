@@ -68,34 +68,34 @@
 		(remove_unused_layers no)
 		(uuid "00000000-0000-0000-0000-000000000102")
 	)
-	(pad "3" smd rect
-		(at -2 -2.8)
-		(size 4 1.2)
-		(layers "B.Cu" "B.Mask" "B.Paste")
-		(uuid "00000000-0000-0000-0000-000000000103")
-	)
-	(pad "4" smd rect
+	(pad "3" connect rect
 		(at -2 2.8)
 		(size 4 1.2)
-		(layers "B.Cu" "B.Mask" "B.Paste")
+		(layers "B.Cu" "B.Mask")
+		(uuid "00000000-0000-0000-0000-000000000103")
+	)
+	(pad "4" connect rect
+		(at -2 -2.8)
+		(size 4 1.2)
+		(layers "B.Cu" "B.Mask")
 		(uuid "00000000-0000-0000-0000-000000000104")
 	)
-	(pad "5" smd rect
-		(at -2 -2.3)
-		(size 4 1.2)
-		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "00000000-0000-0000-0000-000000000105")
-	)
-	(pad "6" smd rect
-		(at -2 0)
-		(size 4 1.2)
-		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "00000000-0000-0000-0000-000000000106")
-	)
-	(pad "7" smd rect
+	(pad "5" connect rect
 		(at -2 2.3)
 		(size 4 1.2)
-		(layers "F.Cu" "F.Mask" "F.Paste")
+		(layers "F.Cu" "F.Mask")
+		(uuid "00000000-0000-0000-0000-000000000105")
+	)
+	(pad "6" connect rect
+		(at -2 0)
+		(size 4 1.2)
+		(layers "F.Cu" "F.Mask")
+		(uuid "00000000-0000-0000-0000-000000000106")
+	)
+	(pad "7" connect rect
+		(at -2 -2.3)
+		(size 4 1.2)
+		(layers "F.Cu" "F.Mask")
 		(uuid "00000000-0000-0000-0000-000000000107")
 	)
 	(embedded_fonts no)
