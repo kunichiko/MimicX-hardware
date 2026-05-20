@@ -12,8 +12,10 @@
 
 - [`atari-joystick/`](atari-joystick/) — ATARI 仕様ジョイスティックアダプタ
   (D-SUB 9pin。X68000 / メガドライブ 6 ボタン互換)
+  - [PCBレイアウト](https://kicanvas.org/?repo=https%3A%2F%2Fgithub.com%2Fkunichiko%2FMimicX-hardware%2Fblob%2Fmain%2Fatari-joystick%2Flayouts%2Fdefault%2Fdefault.kicad_pcb) - まだ未完成
 - [`x68000-keyboard/`](x68000-keyboard/) — X68000 キーボードアダプタ
   (ミニ DIN 7pin。キーボード + マウス相乗り)
+  - [PCBレイアウト](https://kicanvas.org/?repo=https%3A%2F%2Fgithub.com%2Fkunichiko%2FMimicX-hardware%2Fblob%2Fmain%2Fx68000-keyboard%2Flayouts%2Fdefault%2Fdefault.kicad_pcb)
 - （今後追加予定）
 
 ## 共通設計事項
