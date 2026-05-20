@@ -134,11 +134,20 @@ module X68000Keyboard:
     #   PB12 (GPIO 入力)                    ↔ a3/b3 ↔ Pin 5 READY (host→kbd)
     #   PB9  (USART4_TX, TX4_3 リマップ)    ↔ a4/b4 ↔ Pin 2 MSDATA (kbd→host)
     #   PB8  (GPIO)                         ↔ a5/b5 ↔ Pin 6 REMOTE (TV リモコン)
-    mcu.PB11 ~ lvls.a1;  lvls.b1 ~ kbd.key_txd    # MCU が受信
-    mcu.PB10 ~ lvls.a2;  lvls.b2 ~ kbd.key_rxd    # MCU が送信
-    mcu.PB12 ~ lvls.a3;  lvls.b3 ~ kbd.ready      # MCU が受信
-    mcu.PB9  ~ lvls.a4;  lvls.b4 ~ kbd.msdata     # MCU が送信 (マウスデータ)
-    mcu.PB8  ~ lvls.a5;  lvls.b5 ~ kbd.remote     # MCU GPIO (用途は将来検討)
+    #
+    # 3.3V 側ネットに用途名を与えておき、KiCad の回路図 / ネットリスト / BOM
+    # 上も "KEY_TXD_3V3" のような意味のある名前で見えるようにする。
+    signal key_txd_3v3; trait key_txd_3v3 has_net_name<name="KEY_TXD_3V3">
+    signal key_rxd_3v3; trait key_rxd_3v3 has_net_name<name="KEY_RXD_3V3">
+    signal ready_3v3;   trait ready_3v3   has_net_name<name="READY_3V3">
+    signal msdata_3v3;  trait msdata_3v3  has_net_name<name="MSDATA_3V3">
+    signal remote_3v3;  trait remote_3v3  has_net_name<name="REMOTE_3V3">
+
+    mcu.PB11 ~ key_txd_3v3; key_txd_3v3 ~ lvls.a1; lvls.b1 ~ kbd.key_txd    # MCU が受信
+    mcu.PB10 ~ key_rxd_3v3; key_rxd_3v3 ~ lvls.a2; lvls.b2 ~ kbd.key_rxd    # MCU が送信
+    mcu.PB12 ~ ready_3v3;   ready_3v3   ~ lvls.a3; lvls.b3 ~ kbd.ready      # MCU が受信
+    mcu.PB9  ~ msdata_3v3;  msdata_3v3  ~ lvls.a4; lvls.b4 ~ kbd.msdata     # MCU が送信 (マウスデータ)
+    mcu.PB8  ~ remote_3v3;  remote_3v3  ~ lvls.a5; lvls.b5 ~ kbd.remote     # MCU GPIO (用途は将来検討)
 
     # 未使用 3 チャネル — A 側を GND に落としてフロート回避
     lvls.a6 ~ vdd33.lv

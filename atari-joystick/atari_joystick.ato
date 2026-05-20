@@ -142,17 +142,28 @@ module AtariJoystick:
     #   MCU=0V → 5V 側 0V (FET ON で引き下げ)
     #   MCU=3.3V → 5V 側はホストのプルアップで 5V に復元 (FET 自動 OFF)
     # となり、ホスト側から見ると従来の open-drain ポートと同じ振る舞いになる。
-    mcu.PA7 ~ lvls.a1;  lvls.b1 ~ joy.up
-    mcu.PA5 ~ lvls.a2;  lvls.b2 ~ joy.down
-    mcu.PA3 ~ lvls.a3;  lvls.b3 ~ joy.left
-    mcu.PA2 ~ lvls.a4;  lvls.b4 ~ joy.right
-    mcu.PA6 ~ lvls.a5;  lvls.b5 ~ joy.triga
-    mcu.PA4 ~ lvls.a6;  lvls.b6 ~ joy.trigb
+    #
+    # 3.3V 側ネットに用途名を与えておき、KiCad の回路図 / ネットリスト / BOM
+    # 上も "UP_3V3" のような意味のある名前で見えるようにする。
+    signal up_3v3;     trait up_3v3     has_net_name<name="UP_3V3">
+    signal down_3v3;   trait down_3v3   has_net_name<name="DOWN_3V3">
+    signal left_3v3;   trait left_3v3   has_net_name<name="LEFT_3V3">
+    signal right_3v3;  trait right_3v3  has_net_name<name="RIGHT_3V3">
+    signal triga_3v3;  trait triga_3v3  has_net_name<name="TRIGA_3V3">
+    signal trigb_3v3;  trait trigb_3v3  has_net_name<name="TRIGB_3V3">
+    signal common_3v3; trait common_3v3 has_net_name<name="COMMON_3V3">
+
+    mcu.PA7 ~ up_3v3;    up_3v3    ~ lvls.a1; lvls.b1 ~ joy.up
+    mcu.PA5 ~ down_3v3;  down_3v3  ~ lvls.a2; lvls.b2 ~ joy.down
+    mcu.PA3 ~ left_3v3;  left_3v3  ~ lvls.a3; lvls.b3 ~ joy.left
+    mcu.PA2 ~ right_3v3; right_3v3 ~ lvls.a4; lvls.b4 ~ joy.right
+    mcu.PA6 ~ triga_3v3; triga_3v3 ~ lvls.a5; lvls.b5 ~ joy.triga
+    mcu.PA4 ~ trigb_3v3; trigb_3v3 ~ lvls.a6; lvls.b6 ~ joy.trigb
 
     # COMMON / TH (ホスト 8255 push-pull 出力 → MCU 入力) — MD 6 ボタンの MUX
     # 切替検出を TIM2_CH1 で実施。バススイッチ経由で MCU には 0V/3.3V クランプ
     # 済みの信号が届くため、CH32X035 の絶対最大定格を満たしたまま受けられる。
-    mcu.PA0 ~ lvls.a7;  lvls.b7 ~ joy.common
+    mcu.PA0 ~ common_3v3; common_3v3 ~ lvls.a7; lvls.b7 ~ joy.common
 
     # 予備チャネル (Ch.8) — A 側を GND に落としてフローティング回避
     lvls.a8 ~ vdd33.lv
