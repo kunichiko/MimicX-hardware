@@ -67,6 +67,7 @@ module X68000Keyboard:
     # ===== USB 電源とデータ =====
     usbc.vbus ~ vbus.hv
     usbc.gnd  ~ vbus.lv
+    usbc.shell ~ vbus.lv
 
     # ===== 5V (VBUS) -> 3.3V (VDD33) LDO =====
     ldo.power_in  ~ vbus
@@ -143,16 +144,16 @@ module X68000Keyboard:
     signal msdata_3v3;  trait msdata_3v3  has_net_name<name="MSDATA_3V3">
     signal remote_3v3;  trait remote_3v3  has_net_name<name="REMOTE_3V3">
 
-    mcu.PB11 ~ key_txd_3v3; key_txd_3v3 ~ lvls.a1; lvls.b1 ~ kbd.key_txd    # MCU が受信
-    mcu.PB10 ~ key_rxd_3v3; key_rxd_3v3 ~ lvls.a2; lvls.b2 ~ kbd.key_rxd    # MCU が送信
-    mcu.PB12 ~ ready_3v3;   ready_3v3   ~ lvls.a3; lvls.b3 ~ kbd.ready      # MCU が受信
-    mcu.PB9  ~ msdata_3v3;  msdata_3v3  ~ lvls.a4; lvls.b4 ~ kbd.msdata     # MCU が送信 (マウスデータ)
-    mcu.PB8  ~ remote_3v3;  remote_3v3  ~ lvls.a5; lvls.b5 ~ kbd.remote     # MCU GPIO (用途は将来検討)
+    mcu.PB11 ~ key_txd_3v3; key_txd_3v3 ~ lvls.a6; lvls.b6 ~ kbd.key_txd    # MCU が受信
+    mcu.PB10 ~ key_rxd_3v3; key_rxd_3v3 ~ lvls.a4; lvls.b4 ~ kbd.key_rxd    # MCU が送信
+    mcu.PB12 ~ ready_3v3;   ready_3v3   ~ lvls.a5; lvls.b5 ~ kbd.ready      # MCU が受信
+    mcu.PB9  ~ msdata_3v3;  msdata_3v3  ~ lvls.a8; lvls.b8 ~ kbd.msdata     # MCU が送信 (マウスデータ)
+    mcu.PB8  ~ remote_3v3;  remote_3v3  ~ lvls.a7; lvls.b7 ~ kbd.remote     # MCU GPIO (用途は将来検討)
 
     # 未使用 3 チャネル — A 側を GND に落としてフロート回避
-    lvls.a6 ~ vdd33.lv
-    lvls.a7 ~ vdd33.lv
-    lvls.a8 ~ vdd33.lv
+    lvls.a1 ~ vdd33.lv
+    lvls.a2 ~ vdd33.lv
+    lvls.a3 ~ vdd33.lv
 
     # TODO: DIN 各信号ライン (lvls.b1〜b5 と kbd の間) に TVS ダイオードアレイ
     # (例: SP3012-04UTG, PESD5V0S4UD など) を追加して ESD 保護を強化する。
