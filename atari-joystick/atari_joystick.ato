@@ -76,6 +76,7 @@ module AtariJoystick:
     # ===== USB 電源とデータ =====
     usbc.vbus ~ vbus.hv
     usbc.gnd  ~ vbus.lv
+    usbc.shell ~ vbus.lv
 
     # ===== 5V (VBUS) -> 3.3V (VDD33) LDO =====
     ldo.power_in  ~ vbus
@@ -149,20 +150,20 @@ module AtariJoystick:
     signal trigb_3v3;  trait trigb_3v3  has_net_name<name="TRIGB_3V3">
     signal common_3v3; trait common_3v3 has_net_name<name="COMMON_3V3">
 
-    mcu.PA7 ~ up_3v3;    up_3v3    ~ lvls.a1; lvls.b1 ~ joy.up
-    mcu.PA5 ~ down_3v3;  down_3v3  ~ lvls.a2; lvls.b2 ~ joy.down
-    mcu.PA3 ~ left_3v3;  left_3v3  ~ lvls.a3; lvls.b3 ~ joy.left
-    mcu.PA2 ~ right_3v3; right_3v3 ~ lvls.a4; lvls.b4 ~ joy.right
-    mcu.PA6 ~ triga_3v3; triga_3v3 ~ lvls.a5; lvls.b5 ~ joy.triga
-    mcu.PA4 ~ trigb_3v3; trigb_3v3 ~ lvls.a6; lvls.b6 ~ joy.trigb
+    mcu.PA7 ~ up_3v3;    up_3v3    ~ lvls.a8; lvls.b8 ~ joy.up
+    mcu.PA5 ~ down_3v3;  down_3v3  ~ lvls.a6; lvls.b6 ~ joy.down
+    mcu.PA3 ~ left_3v3;  left_3v3  ~ lvls.a4; lvls.b4 ~ joy.left
+    mcu.PA2 ~ right_3v3; right_3v3 ~ lvls.a2; lvls.b2 ~ joy.right
+    mcu.PA6 ~ triga_3v3; triga_3v3 ~ lvls.a7; lvls.b7 ~ joy.triga
+    mcu.PA4 ~ trigb_3v3; trigb_3v3 ~ lvls.a5; lvls.b5 ~ joy.trigb
 
     # COMMON / TH (ホスト 8255 push-pull 出力 → MCU 入力) — MD 6 ボタンの MUX
     # 切替検出を TIM2_CH1 で実施。バススイッチ経由で MCU には 0V/3.3V クランプ
     # 済みの信号が届くため、CH32X035 の絶対最大定格を満たしたまま受けられる。
-    mcu.PA0 ~ common_3v3; common_3v3 ~ lvls.a7; lvls.b7 ~ joy.common
+    mcu.PA0 ~ common_3v3; common_3v3 ~ lvls.a3; lvls.b3 ~ joy.common
 
-    # 予備チャネル (Ch.8) — A 側を GND に落としてフローティング回避
-    lvls.a8 ~ vdd33.lv
+    # 予備チャネル (Ch.1) — A 側を GND に落としてフローティング回避
+    lvls.a1 ~ vdd33.lv
 
     # TODO: D-SUB 各ピン (lvls.b1〜b7 と joy 側の間) に TVS ダイオードアレイ
     # (例: SP3012-04UTG, PESD5V0S4UD など) を追加して ESD 保護を強化する。
