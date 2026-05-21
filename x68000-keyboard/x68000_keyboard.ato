@@ -24,6 +24,10 @@ module X68000Keyboard:
     キーボード本体とマウス端子を兼ねた 1 コネクタ構成。ファーム側は
     `BOARD_X68K_FULL` ビルドで両方をエミュレートする。
 
+    電源構成: USB バスパワー (VBUS, 5V) から LDO で MCU 用 VDD33 (3.3V) を
+    生成し、レベルシフタの B 側 (5V) は X68000 本体側の Vcc2 (DIN Pin 1) を
+    直接受ける。VBUS と Vcc2 は基板内では分離され、逆流リスクを回避する。
+
     ピン割当・設計理由は README.md と ../docs/CH32X035.md を参照。
     """
 
@@ -38,6 +42,11 @@ module X68000Keyboard:
     vdd33 = new ElectricPower
     trait vdd33.hv has_net_name<name="VDD33">
     trait vdd33.lv has_net_name<name="GND">
+
+    # X68000 キーボード端子の Vcc2 (Pin 1) 用電源レール
+    vcc2 = new ElectricPower
+    trait vcc2.hv has_net_name<name="VCC2">
+    trait vcc2.lv has_net_name<name="GND">
 
     # ===== サブブロック =====
     mcu  = new CH32X035G8U6
@@ -119,10 +128,10 @@ module X68000Keyboard:
     # 3.6V at VDD=3.3V)。X68000 キーボード端子は全信号 5V TTL (本体側 8255 /
     # SN74LSxx 系の駆動とプルアップ 5V) であり、直結すると MCU ピンが定格を
     # 超え破損する。TC7MPB9307FT (パッシブ FET バススイッチ) で A=VDD33 /
-    # B=VBUS に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
-    # 8 チャネル中 5 ch を使用、残り 3 ch (a6/a7/a8) は A 側を GND に固定。
+    # B=VCC2 に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
+    # 8 チャネル中 5 ch (a4〜a8) を使用、残り 3 ch (a1/a2/a3) は A 側を GND に固定。
     lvls.power_a ~ vdd33    # A 側 = MCU の 3.3V
-    lvls.power_b ~ vbus     # B 側 = X68000 の 5V
+    lvls.power_b ~ vcc2     # B 側 = X68000 の 5V
 
     # ===== Mini DIN 7pin (X68000 キーボード / マウス端子) =====
     # ピンラベルは X68000 サービスマニュアル準拠 (ホスト視点の Tx/Rx)。
@@ -130,11 +139,11 @@ module X68000Keyboard:
     # 応答 (KEY RxD / Pin 3) を送信する。
     #
     # 接続マップ (MCU ピン ↔ レベルシフタ ↔ DIN ピン):
-    #   PB11 (USART1_RX, RX1_2 リマップ)    ↔ a1/b1 ↔ Pin 4 KEY TxD (host→kbd)
-    #   PB10 (USART1_TX, default)           ↔ a2/b2 ↔ Pin 3 KEY RxD (kbd→host)
-    #   PB12 (GPIO 入力)                    ↔ a3/b3 ↔ Pin 5 READY (host→kbd)
-    #   PB9  (USART4_TX, TX4_3 リマップ)    ↔ a4/b4 ↔ Pin 2 MSDATA (kbd→host)
-    #   PB8  (GPIO)                         ↔ a5/b5 ↔ Pin 6 REMOTE (TV リモコン)
+    #   PB11 (USART1_RX, RX1_2 リマップ)    ↔ a6/b6 ↔ Pin 4 KEY TxD (host→kbd)
+    #   PB10 (USART1_TX, default)           ↔ a4/b4 ↔ Pin 3 KEY RxD (kbd→host)
+    #   PB12 (GPIO 入力)                    ↔ a5/b5 ↔ Pin 5 READY (host→kbd)
+    #   PB9  (USART4_TX, TX4_3 リマップ)    ↔ a8/b8 ↔ Pin 2 MSDATA (kbd→host)
+    #   PB8  (GPIO)                         ↔ a7/b7 ↔ Pin 6 REMOTE (TV リモコン)
     #
     # 3.3V 側ネットに用途名を与えておき、KiCad の回路図 / ネットリスト / BOM
     # 上も "KEY_TXD_3V3" のような意味のある名前で見えるようにする。
@@ -155,14 +164,11 @@ module X68000Keyboard:
     lvls.a2 ~ vdd33.lv
     lvls.a3 ~ vdd33.lv
 
-    # TODO: DIN 各信号ライン (lvls.b1〜b5 と kbd の間) に TVS ダイオードアレイ
+    # TODO: DIN 各信号ライン (lvls.b4〜b8 と kbd の間) に TVS ダイオードアレイ
     # (例: SP3012-04UTG, PESD5V0S4UD など) を追加して ESD 保護を強化する。
     # キーボードケーブルは外部に長く伸びるため特に重要。
 
     # ホストと共通 GND
     kbd.gnd ~ vbus.lv
+    kbd.vcc2 ~ vcc2.hv     # X68000 キーボード端子の Vcc2 (Pin 1) はホストの +5V
 
-    # Pin 1 (Vcc2 = ホスト +5V): 既定では NC。基板上の電源は USB バスパワー
-    # から取得する (案 A)。VBUS と Vcc2 を同時通電させると逆流リスクがある
-    # ため、後付けで 0Ω ジャンパや Schottky ダイオードを VBUS に向けて
-    # 追加する場合のみ Pin 1 を接続する想定。
