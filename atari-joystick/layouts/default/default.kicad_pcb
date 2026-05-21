@@ -148,7 +148,6 @@
 	(net 24 "sbu2")
 	(net 25 "shell")
 	(net 26 "PA1")
-	(net 27 "vcc")
 	(net 34 "cathode-1")
 	(net 35 "cathode")
 	(net 36 "terminal_b")
@@ -175,6 +174,7 @@
 	(net 59 "TRIGB_3V3")
 	(net 2 "PC14_CC1_T1C3_T2C2_")
 	(net 11 "PC15_CC2_T2C3_T1ET_")
+	(net 1 "VCC_HOST")
 	(footprint "Everlight_Elec_19_217_GHC_YR1S2_3T:LED0603-RD"
 		(layer "F.Cu")
 		(uuid "141a7857-505b-4bbc-9966-869d4642524b")
@@ -3007,7 +3007,7 @@
 			(size 1.57 1.57)
 			(drill 0.999998)
 			(layers "*.Cu" "*.Mask")
-			(net 27 "vcc")
+			(net 1 "VCC_HOST")
 			(uuid "53b3c8fe-e2dc-47f8-8308-21b19dc6c7e6")
 		)
 		(pad "6" thru_hole circle
@@ -6106,7 +6106,7 @@
 			(at -2.93 -2.87 0)
 			(size 0.36 1.74)
 			(layers "F.Cu" "F.Paste" "F.Mask")
-			(net 45 "VBUS")
+			(net 1 "VCC_HOST")
 			(uuid "c3caa78f-7c88-4ba1-a23a-54cdad7a2024")
 		)
 		(pad "19" smd oval
@@ -6697,7 +6697,7 @@
 			(at -0.42 0 0)
 			(size 0.5 0.54)
 			(layers "F.Cu" "F.Paste" "F.Mask")
-			(net 45 "VBUS")
+			(net 1 "VCC_HOST")
 			(uuid "c36e15d6-4538-48a6-8779-9e50c8e33744")
 		)
 		(embedded_fonts no)

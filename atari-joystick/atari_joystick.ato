@@ -23,6 +23,11 @@ module AtariJoystick:
                                        ↕  TC7MPB9307FT (5V↔3.3V level shifter)
                               ──>  D-SUB 9pin (X68000 / ATARI 標準, 5V)
 
+    電源構成: USB バスパワー (VBUS, 5V) から LDO で MCU 用 VDD33 (3.3V) を
+    生成し、レベルシフタの B 側 (5V) はホスト側 D-SUB Pin 5 から供給される
+    VCC_HOST を直接受ける。VBUS と VCC_HOST は基板内では分離され、逆流リスク
+    を回避する。X68000 / メガドライブはどちらも Pin 5 で +5V を供給する。
+
     ピン割当・設計理由は README.md と docs/CH32X035.md を参照。
     """
 
@@ -38,6 +43,12 @@ module AtariJoystick:
     vdd33 = new ElectricPower
     trait vdd33.hv has_net_name<name="VDD33">
     trait vdd33.lv has_net_name<name="GND">
+
+    # ホスト側 +5V (D-SUB Pin 5) 用電源レール。レベルシフタ B 側 (VCCB) の
+    # 電源として使う。VBUS とは分離してホスト電位と完全に整合させる。
+    vcc_host = new ElectricPower
+    trait vcc_host.hv has_net_name<name="VCC_HOST">
+    trait vcc_host.lv has_net_name<name="GND">
 
     # ===== サブブロック =====
     mcu  = new CH32X035G8U6
@@ -131,10 +142,10 @@ module AtariJoystick:
     # 3.6V at VDD=3.3V)。X68000 側の 5V 信号 (8255 push-pull の COMMON、
     # 方向/トリガ線のホスト側プルアップ 5V) と直結すると MCU ピンが定格を
     # 超え破損する。TC7MPB9307FT (パッシブ FET バススイッチ) で A=VDD33 /
-    # B=VBUS に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
+    # B=VCC_HOST に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
     # 8 チャネル中 7 ch を使用、a8/b8 は予備 (a8 を GND に固定)。
-    lvls.power_a ~ vdd33    # A 側 = MCU の 3.3V
-    lvls.power_b ~ vbus     # B 側 = X68000 の 5V
+    lvls.power_a ~ vdd33     # A 側 = MCU の 3.3V
+    lvls.power_b ~ vcc_host  # B 側 = ホスト (X68000 / MD) の +5V (D-SUB Pin 5)
 
     # ===== D-SUB 9pin ジョイスティック出力 (ATARI / X68000 標準) =====
     # 方向/トリガ線: 8255 入力 + ホスト側プルアップ 5V に対する open-drain 動作。
@@ -175,5 +186,7 @@ module AtariJoystick:
     # ホストと共通 GND
     joy.gnd ~ vbus.lv
 
-    # Pin 5 (ホストからの +5V): 既定では NC。後付けで 0Ω ジャンパや Schottky
-    # ダイオードを VBUS に向けて追加すれば、ホスト → 当基板への給電も可能。
+    # Pin 5 (ホストからの +5V): VCC_HOST レールに接続し、レベルシフタ B 側
+    # (VCCB) の電源として使う。VBUS とは基板内では分離されているため、ホスト
+    # 側電源と USB バスパワーが同時にあっても逆流しない。
+    joy.vcc ~ vcc_host.hv
