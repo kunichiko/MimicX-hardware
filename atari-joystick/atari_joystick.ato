@@ -172,6 +172,10 @@ module AtariJoystick:
     # ホストと共通 GND
     joy.gnd ~ vbus.lv
 
+    # D-SUB シェル (固定金具 / シールド) も GND に接続。USB-C シェルと同様、
+    # ケーブルシールドのリターンパスとシャーシ電位を 0V に固定する。
+    joy.shell ~ vbus.lv
+
     # Pin 5 (ホストからの +5V): VCC_HOST レールに接続し、レベルシフタ B 側
     # (VCCB) の電源として使う。VBUS とは基板内では分離されているため、ホスト
     # 側電源と USB バスパワーが同時にあっても逆流しない。
