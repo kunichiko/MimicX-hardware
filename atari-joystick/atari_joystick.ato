@@ -118,9 +118,15 @@ module AtariJoystick:
     # PB0 (QFN28 pin 13) から DI を駆動。WS2812 プロトコル (800 kHz / 24bit
     # GRB) で点灯色を任意に変更可能。電源は VDD33 を共有 (WS2812B-2020 は
     # 3.3V 動作可、データ閾値 VIH ≈ 0.7×VDD)。
+    #
+    # DI 直前に 470Ω 直列ダンピング抵抗を入れて源端整合 (反射制動) と ESD
+    # 緩衝を取る。抵抗は MCU 側に寄せて配置することで効果が最大化する。
     rgb = new LedRgbWs2812b
     rgb.power ~ vdd33
-    mcu.PB0 ~ rgb.din
+    rrgb = new Resistor
+    rrgb.resistance = 470ohm +/- 5%
+    rrgb.package = "I0402"
+    mcu.PB0 ~> rrgb ~> rgb.din
 
     # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
     # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
