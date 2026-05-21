@@ -119,4 +119,18 @@
 		(options "")
 		(descr "atopile: part lib: MiniDIN_7P_X68000")
 	)
+	(lib
+		(name "Hubei_KENTO_Elec_KT_0603G")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/Hubei_KENTO_Elec_KT_0603G")
+		(options "")
+		(descr "atopile: part lib: Hubei_KENTO_Elec_KT_0603G")
+	)
+	(lib
+		(name "Worldsemi_WS2812B_2020")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020")
+		(options "")
+		(descr "atopile: part lib: Worldsemi_WS2812B_2020")
+	)
 )
