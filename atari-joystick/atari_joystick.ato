@@ -11,6 +11,8 @@ from "parts/dsub9.ato" import DSub9Female
 from "parts/buttons.ato" import TactSwitch_2P
 from "parts/ldo_3v3.ato" import Ldo3V3
 from "parts/level_shifter.ato" import LevelShifter8Bit
+from "parts/leds.ato" import LedGreenKT0603
+from "parts/leds.ato" import LedRgbWs2812b
 
 
 module AtariJoystick:
@@ -102,9 +104,23 @@ module AtariJoystick:
     cdec.package = "I0402"
     cdec.power ~ vdd33
 
-    # ===== デバッグ LED は実装しない (基板小型化のため省略) =====
-    # PB11 / PB12 は未使用ピンとして残しておく。将来的な拡張で必要なら
-    # この位置に LedGreen0603 / LedRed0603 + 470Ω 直列抵抗を再挿入する。
+    # ===== 電源 LED (緑, 0603 / 常時点灯) =====
+    # VDD33 = 3.3V, Vf ≈ 2.0V, 電流 ~1.3mA を狙って 1kΩ。電源インジケータ
+    # 用途なので低電流に絞り、消費電力を抑える。
+    pled = new LedGreenKT0603
+    rpled = new Resistor
+    rpled.resistance = 1kohm +/- 5%
+    rpled.package = "I0402"
+    vdd33.hv ~ pled.anode
+    pled.cathode ~> rpled ~> vdd33.lv
+
+    # ===== フルカラー LED (WS2812B-2020, シリアル制御 RGB) =====
+    # PB0 (QFN28 pin 13) から DI を駆動。WS2812 プロトコル (800 kHz / 24bit
+    # GRB) で点灯色を任意に変更可能。電源は VDD33 を共有 (WS2812B-2020 は
+    # 3.3V 動作可、データ閾値 VIH ≈ 0.7×VDD)。
+    rgb = new LedRgbWs2812b
+    rgb.power ~ vdd33
+    mcu.PB0 ~ rgb.din
 
     # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
     # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
