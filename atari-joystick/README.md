@@ -15,8 +15,13 @@ Mimic X — ATARI 仕様ジョイスティックアダプタ基板
 | MCU | WCH CH32X035G8U6 | QFN28 (4×4 mm)、48MHz、5V トレラント、USB Full-Speed 内蔵 |
 | USB コネクタ | USB Type-C (Receptacle, 16pin, TYPE-C-31-M-12) | スマートフォンと接続 |
 | 出力コネクタ | D-SUB 9pin **メス** (CONNFLY DS1037-09FNAKT74-0CC) | ATARI/X68000 ジョイスティックポート (ホスト側オスに直挿し) |
-| LED | チップ LED (0603) ×2 | デバッグ用 (PB3, PB4) |
+| LDO | LP5907MFX-3.3 (250 mA) | VBUS 5V → MCU VDD 3.3V |
+| レベルシフタ | Toshiba TC7MPB9307FT (TSSOP-20) | 8-bit Dual-Supply Bus Switch、3.3V↔5V |
+| BOOT ボタン | XUNPU TS-1088-AR02016 (3.9×3.0mm, 2 ピン) | リセット時 USB DFU 起動用 |
 | その他 | ESD 保護 (USB), デカップリング 0.1µF / 4.7µF, USB Type-C CC 抵抗 5.1kΩ ×2 |
+
+> 基板を小型化するため、デバッグ LED は実装していない (PB11 / PB12 は未使用)。
+> 必要であれば後付けで VDD33 → LED → 470Ω → MCU ピンで追加可能。
 
 ## ピン割当 (CH32X035 → コネクタ)
 
@@ -31,8 +36,8 @@ Mimic X — ATARI 仕様ジョイスティックアダプタ基板
 | PA2     | Right | Pin 4 | 同上 |
 | PA6     | TRIG-A | Pin 6 | 同上 |
 | PA4     | TRIG-B | Pin 7 | 同上 |
-| PB3     | Debug LED 0 | — | (基板上、緑/赤) |
-| PB4     | Debug LED 1 | — | (基板上、緑/赤) |
+| PB11    | (未使用) | — | LED 省略のため空き (将来拡張用) |
+| PB12    | (未使用) | — | LED 省略のため空き (将来拡張用) |
 | —       | GND  | Pin 9 | ホスト側と共通 |
 | —       | +5V (VCC_HOST) | Pin 5 | ホストの +5V をレベルシフタ B 側電源として受け入れ |
 
