@@ -1,0 +1,53 @@
+import ElectricPower
+
+from "Everlight_Elec_19_217_GHC_YR1S2_3T/Everlight_Elec_19_217_GHC_YR1S2_3T.ato" import Everlight_Elec_19_217_GHC_YR1S2_3T_package
+from "Hubei_KENTO_Elec_KT_0603R/Hubei_KENTO_Elec_KT_0603R.ato" import Hubei_KENTO_Elec_KT_0603R_package
+from "Hubei_KENTO_Elec_KT_0603G/Hubei_KENTO_Elec_KT_0603G.ato" import Hubei_KENTO_Elec_KT_0603G_package
+from "Worldsemi_WS2812B_2020/Worldsemi_WS2812B_2020.ato" import Worldsemi_WS2812B_2020_package
+
+
+module LedGreen0603:
+    """緑 0603 LED — Everlight 19-217/GHC-YR1S2/3T (LCSC C72043)。
+    `anode` / `cathode` の統一インターフェースで公開する。"""
+
+    chip = new Everlight_Elec_19_217_GHC_YR1S2_3T_package
+    signal anode;   anode   ~ chip.A
+    signal cathode; cathode ~ chip.C
+
+
+module LedRed0603:
+    """赤 0603 LED — Hubei KENTO KT-0603R (LCSC C2286)。
+    `anode` / `cathode` の統一インターフェースで公開する。"""
+
+    chip = new Hubei_KENTO_Elec_KT_0603R_package
+    signal anode;   anode   ~ chip.A
+    signal cathode; cathode ~ chip.K
+
+
+module LedGreenKT0603:
+    """緑 0603 LED (Hubei KENTO 仕様) — KT-0603G (LCSC C12624)。
+    既存の KT-0603R と同じ Hubei KENTO シリーズで揃えたい場合に使う。"""
+
+    chip = new Hubei_KENTO_Elec_KT_0603G_package
+    signal anode;   anode   ~ chip.A
+    signal cathode; cathode ~ chip.K
+
+
+module LedRgbWs2812b:
+    """フルカラー (RGB) LED — Worldsemi WS2812B-2020 (LCSC C965555)。
+
+    2.0×2.0×0.8mm の超小型シリアル制御 RGB LED。MCU から 1 本のデータ線
+    (DI) で 24bit GRB シリアル送信して点灯色を制御する。データ転送は
+    800 kHz の独自エンコード (T0H/T1H/T0L/T1L) で、ファーム側は GPIO
+    bit-bang または TIM_DMA + キャリアパルス幅変調で実装するのが定石。
+
+    インターフェース:
+        `power` (ElectricPower; VDD/GND), `din`, `dout`
+    """
+
+    chip = new Worldsemi_WS2812B_2020_package
+    power = new ElectricPower
+    signal din;  din  ~ chip.DI
+    signal dout; dout ~ chip.DO
+    chip.VDD ~ power.hv
+    chip.GND ~ power.lv

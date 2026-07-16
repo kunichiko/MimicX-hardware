@@ -1,0 +1,50 @@
+# Seeed Studio XIAO ESP32-C6 モジュール — アトミック部品定義
+#
+# 自作部品 (モジュール実装用フットプリント)。XIAO はキャステレーション付き
+# 14 ピン (2 列 × 7、2.54mm ピッチ) のモジュールで、基板には直接はんだ付け
+# するか、1×7 ピンソケット 2 本で実装する。
+#
+# ⚠ フットプリントは仮置き (2.54mm ピッチ / 列間 15.24mm のスルーホール)。
+#   実装前に Seeed 公式の機械図面 / KiCad フットプリント
+#   (https://wiki.seeedstudio.com/xiao_esp32c6_getting_started/) と照合して
+#   KiCad Footprint Editor で確定させること。MiniDIN_7P_X68000 と同じ運用。
+#
+# ピン番号は Seeed 公式ピンマップ準拠 (USB-C を上にした表面視で
+# 左列を上から 1-7、右列を下から 8-14):
+#    1: D0 / GPIO0 / A0        8: D7  / GPIO17 (RX)
+#    2: D1 / GPIO1 / A1        9: D8  / GPIO19 (SCK)
+#    3: D2 / GPIO2 / A2       10: D9  / GPIO20 (MISO)
+#    4: D3 / GPIO21           11: D10 / GPIO18 (MOSI)
+#    5: D4 / GPIO22 (SDA)     12: 3V3 (モジュール LDO 出力)
+#    6: D5 / GPIO23 (SCL)     13: GND
+#    7: D6 / GPIO16 (TX)      14: 5V  (USB VBUS)
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component XIAO_ESP32C6_package:
+    """Seeed Studio XIAO ESP32-C6 モジュール (14 ピン)。"""
+
+    trait is_atomic_part<manufacturer="Seeed Studio", partnumber="XIAO_ESP32C6", footprint="XIAO_ESP32C6.kicad_mod", symbol="XIAO_ESP32C6.kicad_sym", model="XIAO_ESP32C6.step">
+    # モジュールは別途手配して実装する想定。BOM ピッカーをスキップさせる
+    # ためのダミー LCSC 番号 (MiniDIN_7P_X68000 と同じ運用)。
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C0000001", manufacturer="Seeed Studio", partno="XIAO ESP32-C6">
+    trait has_designator_prefix<prefix="U">
+
+    # ---- 信号ピン (Seeed 公式ピン番号) ----
+    signal P1  ~ pin 1     # D0 / GPIO0
+    signal P2  ~ pin 2     # D1 / GPIO1
+    signal P3  ~ pin 3     # D2 / GPIO2
+    signal P4  ~ pin 4     # D3 / GPIO21
+    signal P5  ~ pin 5     # D4 / GPIO22 (SDA)
+    signal P6  ~ pin 6     # D5 / GPIO23 (SCL)
+    signal P7  ~ pin 7     # D6 / GPIO16 (TX)
+    signal P8  ~ pin 8     # D7 / GPIO17 (RX)
+    signal P9  ~ pin 9     # D8 / GPIO19 (SCK)
+    signal P10 ~ pin 10    # D9 / GPIO20 (MISO)
+    signal P11 ~ pin 11    # D10 / GPIO18 (MOSI)
+    signal P12 ~ pin 12    # 3V3
+    signal P13 ~ pin 13    # GND
+    signal P14 ~ pin 14    # 5V (VBUS)

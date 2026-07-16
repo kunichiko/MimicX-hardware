@@ -1,0 +1,21 @@
+# ショットキーバリアダイオード — ラッパーモジュール
+#
+# アトミック部品は `parts/SS14_SMA/SS14_SMA.ato`。電源 OR-ing
+# (VCC_JOY / VCC_KBD → VCC_ESP) に使う。
+
+from "SS14_SMA/SS14_SMA.ato" import SS14_SMA_package
+
+
+module SchottkyDiode:
+    """ショットキーバリアダイオード SS14 の MimicX 用ラッパー。
+
+    使用例 (電源 OR-ing):
+        d = new SchottkyDiode
+        vcc_joy.hv ~ d.anode
+        d.cathode ~ vcc_esp.hv
+    """
+
+    chip = new SS14_SMA_package
+
+    signal anode;   anode   ~ chip.A
+    signal cathode; cathode ~ chip.K

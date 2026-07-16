@@ -1,0 +1,47 @@
+# Seeed Studio XIAO ESP32-C6 モジュール — ラッパーモジュール
+#
+# アトミック部品は `parts/XIAO_ESP32C6/XIAO_ESP32C6.ato`。本ファイルはそれを
+# 機能名 (d0〜d10 / power_3v3 / power_5v) で公開する MimicX 用ラッパー。
+# `mini_din7.ato` ↔ `MiniDIN_7P_X68000/` と同じパターン。
+#
+# GPIO 番号はファームウェア (MimicX-firmware/platforms/esp32/main/board_config.h
+# の CONFIG_IDF_TARGET_ESP32C6 節) と対応させること:
+#   D3 = GPIO21 = I2C INT (CH32 PB1)
+#   D4 = GPIO22 = I2C SDA / SWD SWDIO (CH32 PC18)
+#   D5 = GPIO23 = I2C SCL / SWD SWCLK (CH32 PC19)
+
+import ElectricPower
+
+from "XIAO_ESP32C6/XIAO_ESP32C6.ato" import XIAO_ESP32C6_package
+
+
+module XiaoEsp32C6:
+    """Seeed XIAO ESP32-C6 の MimicX 用ラッパー。
+
+    `power_3v3` はモジュール内蔵 LDO の 3.3V **出力** (キャリア基板側の
+    3.3V レール源として使える)。`power_5v` は USB VBUS。GND は両 power の
+    lv として共有する。
+    """
+
+    chip = new XIAO_ESP32C6_package
+
+    # ---- 電源 ----
+    power_3v3 = new ElectricPower    # 3.3V 出力 (モジュール内蔵 LDO)
+    power_5v  = new ElectricPower    # 5V (USB VBUS)
+    power_3v3.hv ~ chip.P12
+    power_3v3.lv ~ chip.P13
+    power_5v.hv  ~ chip.P14
+    power_5v.lv  ~ chip.P13
+
+    # ---- GPIO ----
+    signal d0;  d0  ~ chip.P1     # GPIO0
+    signal d1;  d1  ~ chip.P2     # GPIO1
+    signal d2;  d2  ~ chip.P3     # GPIO2
+    signal d3;  d3  ~ chip.P4     # GPIO21
+    signal d4;  d4  ~ chip.P5     # GPIO22 (SDA)
+    signal d5;  d5  ~ chip.P6     # GPIO23 (SCL)
+    signal d6;  d6  ~ chip.P7     # GPIO16 (TX)
+    signal d7;  d7  ~ chip.P8     # GPIO17 (RX)
+    signal d8;  d8  ~ chip.P9     # GPIO19
+    signal d9;  d9  ~ chip.P10    # GPIO20
+    signal d10; d10 ~ chip.P11    # GPIO18

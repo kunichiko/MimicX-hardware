@@ -1,0 +1,29 @@
+# JST XH 9P トップエントリーヘッダ (B9B-XH-A) — アトミック部品定義
+#
+# ジョイスティック (D-SUB9) へのケーブル接続用。ロック付き・逆挿し不可・3A。
+#   JST B9B-XH-A(LF)(SN), 2.5mm ピッチ, LCSC C157966
+#
+# ⚠ フットプリントは JST XH データシート基準の仮置き (ピッチ 2.5mm /
+#   ドリル 1.0mm / 外形 24.9×5.75mm)。発注前に KiCad 側で照合すること。
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component JST_XH_B9B_package:
+    """JST XH 9 ピン トップエントリー シュラウドヘッダ (B9B-XH-A)。"""
+
+    trait is_atomic_part<manufacturer="JST", partnumber="B9B-XH-A(LF)(SN)", footprint="JST_XH_B9B.kicad_mod", symbol="JST_XH_B9B.kicad_sym", model="JST_XH_B9B.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C157966", manufacturer="JST Sales America", partno="B9B-XH-A(LF)(SN)">
+    trait has_designator_prefix<prefix="J">
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+    signal P3 ~ pin 3
+    signal P4 ~ pin 4
+    signal P5 ~ pin 5
+    signal P6 ~ pin 6
+    signal P7 ~ pin 7
+    signal P8 ~ pin 8
+    signal P9 ~ pin 9

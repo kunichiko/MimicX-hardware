@@ -1,0 +1,80 @@
+# JST XH ケーブル用コネクタ — ラッパーモジュール
+#
+# Combo 版は D-SUB9 / Mini DIN7 を基板直付けせず、JST XH コネクタ経由の
+# ケーブル接続にする。ピン番号は先方コネクタ (D-SUB / DIN) の番号と 1:1 で
+# 対応させ、ケーブル製作時に迷わないようにする。
+#
+# ケーブル側の注意:
+#   - D-SUB シェル / DIN シールドはケーブル側コネクタの根元で GND ピン
+#     (XH 9P の Pin9 / XH 7P の Pin7) に落とす
+#   - 9P ≠ 7P なので JOY/KBD ケーブルの挿し間違いは物理的に起きない
+
+from "JST_XH_B9B/JST_XH_B9B.ato" import JST_XH_B9B_package
+from "JST_XH_B7B/JST_XH_B7B.ato" import JST_XH_B7B_package
+from "JST_XH_B3B/JST_XH_B3B.ato" import JST_XH_B3B_package
+
+
+module JoystickXh9:
+    """ジョイスティックケーブル用 JST XH 9P (B9B-XH-A)。
+
+    ピン番号 = D-SUB 9pin (ATARI / X68000 標準) の番号:
+        1: Up         6: TRIG-A
+        2: Down       7: TRIG-B
+        3: Left       8: COMMON / TH
+        4: Right      9: GND (+ケーブル側でシェルも落とす)
+        5: +5V (ホスト給電)
+    機能名は dsub9.ato の DSub9Female と互換 (shell を除く)。
+    """
+
+    chip = new JST_XH_B9B_package
+
+    signal up;     up     ~ chip.P1
+    signal down;   down   ~ chip.P2
+    signal left;   left   ~ chip.P3
+    signal right;  right  ~ chip.P4
+    signal vcc;    vcc    ~ chip.P5
+    signal triga;  triga  ~ chip.P6
+    signal trigb;  trigb  ~ chip.P7
+    signal common; common ~ chip.P8
+    signal gnd;    gnd    ~ chip.P9
+
+
+module SwdDebugXh3:
+    """SWD デバッグ端子用 JST XH 3P (B3B-XH-A)。
+
+    WCH-LinkE でのデバッグ / 強制書き換え用 (保険)。CH32 の PC18/PC19 は
+    I2C と SWD の兼用線なので、この端子は I2C バス (SDA_SWDIO / SCL_SWCLK)
+    のタップになる:
+        1: SWCLK (= SCL, CH32 PC19)
+        2: SWDIO (= SDA, CH32 PC18)
+        3: GND
+    使用時の注意は wireless_combo.ato のコメントを参照。
+    """
+
+    chip = new JST_XH_B3B_package
+
+    signal swclk; swclk ~ chip.P1
+    signal swdio; swdio ~ chip.P2
+    signal gnd;   gnd   ~ chip.P3
+
+
+module KeyboardXh7:
+    """キーボードケーブル用 JST XH 7P (B7B-XH-A)。
+
+    ピン番号 = Mini DIN 7pin (X68000 サービスマニュアル) の番号:
+        1: Vcc2 (+5V)         5: READY
+        2: MSDATA              6: REMOTE
+        3: KEY RxD             7: GND (+ケーブル側でシールドも落とす)
+        4: KEY TxD
+    機能名は mini_din7.ato の MiniDin7Male と互換。
+    """
+
+    chip = new JST_XH_B7B_package
+
+    signal vcc2;    vcc2    ~ chip.P1
+    signal msdata;  msdata  ~ chip.P2
+    signal key_rxd; key_rxd ~ chip.P3
+    signal key_txd; key_txd ~ chip.P4
+    signal ready;   ready   ~ chip.P5
+    signal remote;  remote  ~ chip.P6
+    signal gnd;     gnd     ~ chip.P7

@@ -1,0 +1,37 @@
+import has_datasheet
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+import is_auto_generated
+
+component TOSHIBA_TC7MPB9307FT_EL_package:
+    # This trait marks this file as auto-generated
+    # If you want to manually change it, remove the trait
+    trait is_auto_generated<system="ato_part", source="easyeda:C2675018", date="2026-05-19T14:14:45.398738+00:00", checksum="aa88f0a114eb4b956266ce716eb695324f0d58db07c10dc36cf037b294b1466f">
+
+    trait is_atomic_part<manufacturer="TOSHIBA", partnumber="TC7MPB9307FT(EL)", footprint="TSSOP-20_L6.5-W4.4-P0.65-LS6.5-BL.kicad_mod", symbol="TC7MPB9307FT(EL).kicad_sym", model="TSSOP-20_L6.5-W4.4-P0.65-LS6.5-BL.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C2675018", manufacturer="TOSHIBA", partno="TC7MPB9307FT(EL)">
+    trait has_designator_prefix<prefix="U">
+    trait has_datasheet<datasheet="https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2108071630_TOSHIBA-TC7MPB9307FT-EL_C2675018.pdf">
+
+    # pins
+    signal A1 ~ pin 2
+    signal A2 ~ pin 3
+    signal A3 ~ pin 4
+    signal A4 ~ pin 5
+    signal A5 ~ pin 6
+    signal A6 ~ pin 7
+    signal A7 ~ pin 8
+    signal A8 ~ pin 9
+    signal B1 ~ pin 18
+    signal B2 ~ pin 17
+    signal B3 ~ pin 16
+    signal B4 ~ pin 15
+    signal B5 ~ pin 14
+    signal B6 ~ pin 13
+    signal B7 ~ pin 12
+    signal B8 ~ pin 11
+    signal GND ~ pin 10
+    signal VCCA ~ pin 1
+    signal VCCB ~ pin 20
+    signal nOE ~ pin 19

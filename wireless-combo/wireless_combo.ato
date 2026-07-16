@@ -1,0 +1,318 @@
+#pragma experiment("BRIDGE_CONNECT")
+
+import ElectricPower
+import Resistor
+import Capacitor
+import has_net_name
+
+from "parts/ch32x035.ato" import CH32X035G8U6
+from "parts/xiao_esp32c6.ato" import XiaoEsp32C6
+from "parts/xh_connectors.ato" import JoystickXh9
+from "parts/xh_connectors.ato" import KeyboardXh7
+from "parts/xh_connectors.ato" import SwdDebugXh3
+from "parts/buttons.ato" import TactSwitch_2P
+from "parts/level_shifter.ato" import LevelShifter8Bit
+from "parts/leds.ato" import LedGreenKT0603
+from "parts/leds.ato" import LedRgbWs2812b
+from "parts/pfet.ato" import PFetHighSide
+from "parts/schottky.ato" import SchottkyDiode
+
+
+module WirelessCombo:
+    """
+    Mimic X — 無線 (BLE-MIDI) Combined アダプタ。
+
+    Seeed XIAO ESP32-C6 (BLE-MIDI ホスト)
+        ↕ I2C / SWD 共用 2 線 + INT       (protocol §2.5, 2 チップ構成)
+    CH32X035G8U6 (デバイスエンジン, combined-i2c ファーム)
+        ↕ TC7MPB9307FT ×2 (5V↔3.3V level shifter)
+    JST XH 9P → ケーブル → D-SUB 9pin (ATARI/X68000 ジョイスティック)
+    JST XH 7P → ケーブル → Mini DIN 7pin (X68000 キーボード/マウス)
+
+    コネクタ (D-SUB/DIN) は基板直付けせず、JST XH (ロック付き・逆挿し不可・
+    3A) 経由のケーブル接続とする。XH のピン番号は先方コネクタの番号と 1:1。
+
+    ファームウェア対応:
+      - CH32 側: MimicX-firmware `combined-i2c` env (BOARD_COMBINED + MIMICX_I2C)
+      - ESP32 側: MimicX-firmware platforms/esp32c6 (内包イメージ mimic-x-combo)
+
+    電源構成: 5V 電源は 3 系統あり、どれか 1 つでも供給されていれば動作する。
+      - VCC_ESP: XIAO の USB-C (VBUS = XIAO 5V ピン)
+      - VCC_JOY: D-SUB Pin5 (ホスト給電) → ショットキー → VCC_ESP
+      - VCC_KBD: DIN Pin1 Vcc2 (ホスト給電) → ショットキー → VCC_ESP
+    XIAO の 3V3 ピンは内蔵 LDO の「出力」なので、USB 未接続時はホスト 5V を
+    VCC_ESP (5V ピン) に注入して XIAO を駆動する (Seeed 公式推奨の
+    ダイオード給電方式)。基板の VDD33 レールは XIAO 3V3 出力を源とし、
+    CH32 サブシステムは P-FET ハイサイドスイッチ経由の VDD_SW レールで
+    駆動する。レベルシフタ B 側 (5V) は各ホスト給電をコネクタごとに
+    独立に受ける (VCC_JOY / VCC_KBD はダイオードより手前では相互接続しない)。
+
+    ★ この基板の設計肝: ESP32 が CH32 の「電源」と「BOOT (PC17)」を GPIO で
+    制御できる。CH32 ファームがどんな状態でも (SDI off の半ブリック含め)
+    BOOT モード経由で SWD 再書込による復旧が可能:
+      1. 全信号線 (SDA/SCL/INT/BOOT) を Low/Hi-Z 化
+      2. CH32_PWR_OFF=High → 100ms 待つ (ブリーダで VDD_SW 放電)
+      3. CH32_BOOT=High → CH32_PWR_OFF=Low (POR で PC17=High → ブートローダ)
+      4. ~50ms 後 CH32_BOOT=Low に戻し、即 SWD 書込
+    詳細は README.md を参照。
+    """
+
+    # ===== トップレベル電源レール =====
+    # 5V 幹線。XIAO の 5V ピン (USB VBUS 直結) に相当し、USB / ジョイスティック /
+    # キーボードのいずれかから給電される。XIAO 内蔵 LDO の入力でもある。
+    vcc_esp = new ElectricPower
+    trait vcc_esp.hv has_net_name<name="VCC_ESP">
+    trait vcc_esp.lv has_net_name<name="GND">
+
+    # XIAO 内蔵 LDO の 3.3V 出力 (VCC_ESP がある限り常時 ON)。
+    # ESP32 自身 + 常時系 (電源 LED) + P-FET 経由で CH32 サブシステム。
+    vdd33 = new ElectricPower
+    trait vdd33.hv has_net_name<name="VDD33">
+    trait vdd33.lv has_net_name<name="GND">
+    vdd33.lv ~ vcc_esp.lv
+
+    # CH32 サブシステム用スイッチドレール。CH32 / WS2812 / I2C プルアップ /
+    # レベルシフタ A 側はすべてこのレールに繋ぎ、電源 OFF 時にどこからも
+    # バックフィードされないようにする (OFF 中に 1 本でも High があると
+    # 保護ダイオード経由でチップが生き残り POR がかからない)。
+    vdd_sw = new ElectricPower
+    trait vdd_sw.hv has_net_name<name="VDD_SW">
+    trait vdd_sw.lv has_net_name<name="GND">
+    vdd_sw.lv ~ vdd33.lv
+
+    # ホスト側 +5V。ジョイスティック (D-SUB Pin5) とキーボード (DIN Pin1
+    # Vcc2) は別ホスト電源の可能性があるため、直結はせずショットキー経由で
+    # VCC_ESP へ OR-ing する (レベルシフタ B 側は各レールから直接取る)。
+    vcc_joy = new ElectricPower
+    trait vcc_joy.hv has_net_name<name="VCC_JOY">
+    trait vcc_joy.lv has_net_name<name="GND">
+    vcc_joy.lv ~ vdd33.lv
+
+    vcc_kbd = new ElectricPower
+    trait vcc_kbd.hv has_net_name<name="VCC_KBD">
+    trait vcc_kbd.lv has_net_name<name="GND">
+    vcc_kbd.lv ~ vdd33.lv
+
+    # ===== サブブロック =====
+    esp = new XiaoEsp32C6
+    mcu = new CH32X035G8U6
+    joy = new JoystickXh9     # → ケーブル → D-SUB 9pin
+    kbd = new KeyboardXh7     # → ケーブル → Mini DIN 7pin
+    lvls_joy = new LevelShifter8Bit    # ジョイスティック側 5V↔3.3V
+    lvls_kbd = new LevelShifter8Bit    # キーボード側 5V↔3.3V
+
+    # ===== XIAO 電源 =====
+    esp.power_3v3 ~ vdd33
+    esp.power_5v  ~ vcc_esp
+
+    # ===== 電源 OR-ing (ホスト 5V → VCC_ESP) =====
+    # XIAO の 3V3 ピンは内蔵 LDO の出力であり、外部から 3.3V を入れても
+    # ESP32 は動かない。USB 未接続時はホスト 5V をショットキー経由で
+    # VCC_ESP (5V ピン) に注入する (Seeed 公式推奨のダイオード給電方式)。
+    # ダイオードにより:
+    #   - VCC_JOY と VCC_KBD が基板内で直結されない (両ポート同時接続 OK)
+    #   - USB VBUS がホスト側 (レトロ機) へ逆流しない
+    # SS14 の Vf ≈ 0.35V @0.3A なので VCC_ESP ≈ 4.65V → XIAO 内蔵 LDO の
+    # 入力範囲として十分。
+    d_joy = new SchottkyDiode
+    vcc_joy.hv ~ d_joy.anode
+    d_joy.cathode ~ vcc_esp.hv
+
+    d_kbd = new SchottkyDiode
+    vcc_kbd.hv ~ d_kbd.anode
+    d_kbd.cathode ~ vcc_esp.hv
+
+    # ESP32 の無線 TX バースト (数百 mA) をホスト給電時に平滑するバルク。
+    # レトロ機のポート給電はインピーダンスが高めなことがあるため多めに置く。
+    cbulk_esp = new Capacitor
+    cbulk_esp.capacitance = 22uF +/- 20%
+    cbulk_esp.package = "I0805"
+    cbulk_esp.power ~ vcc_esp
+
+    # ===== CH32 電源スイッチ (P-FET ハイサイド, デフォルト ON) =====
+    # ゲートは 100kΩ で GND にプルダウン → XIAO が未初期化/リセット中でも
+    # CH32 は通電 (フェイルセーフ)。ESP32 が GPIO0 を High にすると OFF。
+    qpwr = new PFetHighSide
+    qpwr.source ~ vdd33.hv
+    qpwr.drain  ~ vdd_sw.hv
+
+    signal ch32_pwr_off; trait ch32_pwr_off has_net_name<name="CH32_PWR_OFF">
+    esp.d0 ~ ch32_pwr_off; ch32_pwr_off ~ qpwr.gate    # D0 = GPIO0
+
+    rgate = new Resistor
+    rgate.resistance = 100kohm +/- 5%
+    rgate.package = "I0402"
+    qpwr.gate ~> rgate ~> vdd33.lv
+
+    # ブリーダ: OFF 時に VDD_SW を確実に放電し POR を成立させる
+    # (10kΩ × 数µF ≈ 数十 ms。ファーム側は OFF 期間を 100ms 確保する)。
+    rbleed = new Resistor
+    rbleed.resistance = 10kohm +/- 5%
+    rbleed.package = "I0402"
+    vdd_sw.hv ~> rbleed ~> vdd_sw.lv
+
+    # ===== CH32 電源 + デカップリング =====
+    mcu.vdd ~ vdd_sw.hv
+    mcu.vss ~ vdd_sw.lv
+
+    cbulk = new Capacitor
+    cbulk.capacitance = 4.7uF +/- 20%
+    cbulk.package = "I0603"
+    cbulk.power ~ vdd_sw
+
+    cdec = new Capacitor
+    cdec.capacitance = 100nF +/- 10%
+    cdec.package = "I0402"
+    cdec.power ~ vdd_sw
+
+    # ===== I2C / SWD 共用バス (XIAO ↔ CH32, protocol §2.5) =====
+    # CH32 側は PC18/PC19 が I2C1(remap3) と SDI(2線デバッグ) の兼用ピン。
+    # 通常運用は I2C (CH32 ファームが SDI を無効化)、OTA 時のみ SWD。
+    # プルアップ (4.7kΩ) は I2C 400kHz に必須。★必ず VDD_SW に接続する
+    # (常時 3V3 に繋ぐと電源 OFF 時にバックフィードして POR を阻害する)。
+    signal sda_swdio; trait sda_swdio has_net_name<name="SDA_SWDIO">
+    signal scl_swclk; trait scl_swclk has_net_name<name="SCL_SWCLK">
+
+    esp.d4 ~ sda_swdio; sda_swdio ~ mcu.PC18    # D4 = GPIO22
+    esp.d5 ~ scl_swclk; scl_swclk ~ mcu.PC19    # D5 = GPIO23
+
+    rsda = new Resistor
+    rsda.resistance = 4.7kohm +/- 5%
+    rsda.package = "I0402"
+    vdd_sw.hv ~> rsda ~> sda_swdio
+
+    rscl = new Resistor
+    rscl.resistance = 4.7kohm +/- 5%
+    rscl.package = "I0402"
+    vdd_sw.hv ~> rscl ~> scl_swclk
+
+    # ===== SWD デバッグ端子 (WCH-LinkE 用, JST XH 3P) =====
+    # 保険: WCH-LinkE ケーブルでのデバッグ / 強制書き換え用に SWCLK/SWDIO/GND
+    # を 2.5mm ピッチで引き出す。PC18/PC19 は I2C/SWD 兼用線なので、実体は
+    # I2C バスのタップ。使用時の注意:
+    #   - ESP32 が同じ線を駆動するため、WCH-LinkE 使用中は ESP32 を静かに
+    #     しておく (リセット保持、または I2C/OTA が走っていない状態で)
+    #   - 通常稼働中の CH32 は SDI off なので、まず BOOT ボタン + 電源再投入
+    #     でブートローダ (SDI 有効) にしてから繋ぐと確実
+    dbg = new SwdDebugXh3
+    dbg.swclk ~ scl_swclk
+    dbg.swdio ~ sda_swdio
+    dbg.gnd   ~ vdd33.lv
+
+    # ===== INT 線 (CH32 PB1 → XIAO D3, active-low / open-drain) =====
+    # 外付けプルアップも VDD_SW へ (バックフィード防止)。ESP32 ファームは
+    # 電源 OFF シーケンス中、この線の内蔵プルアップも無効化すること。
+    signal ch32_int; trait ch32_int has_net_name<name="CH32_INT">
+    esp.d3 ~ ch32_int; ch32_int ~ mcu.PB1       # D3 = GPIO21
+
+    rint = new Resistor
+    rint.resistance = 10kohm +/- 5%
+    rint.package = "I0402"
+    vdd_sw.hv ~> rint ~> ch32_int
+
+    # ===== BOOT 制御 (WCH ISP ブートローダ突入, PC17 = UDP) =====
+    # WCH ISP 仕様: POR 時に UDP (PC17) が High だとブートローダに入る。
+    # CH32 の USB は本基板では未接続なので、PC17 は ESP32 の GPIO で直接
+    # ドライブできる (4.7kΩ 直列は BOOT ボタン回路と同じ流儀 + OFF 期間の
+    # バックフィード電流制限)。
+    #
+    # 100kΩ プルダウンで「誰もドライブしていないとき」の PC17 を Low に
+    # 確定させる (XIAO 書込中の GPIO フロートで意図せずブートローダに
+    # 入るのを防ぐ)。
+    signal ch32_boot; trait ch32_boot has_net_name<name="CH32_BOOT">
+    esp.d1 ~ ch32_boot                           # D1 = GPIO1
+
+    rboot = new Resistor
+    rboot.resistance = 4.7kohm +/- 5%
+    rboot.package = "I0402"
+    ch32_boot ~> rboot ~> mcu.usb_dp
+
+    rboot_pd = new Resistor
+    rboot_pd.resistance = 100kohm +/- 5%
+    rboot_pd.package = "I0402"
+    mcu.usb_dp ~> rboot_pd ~> vdd_sw.lv
+
+    # 手動 BOOT ボタン (フォールバック用、GPIO 駆動と並列に併設)。
+    # プル先は VDD_SW (電源 OFF 中に押されてもバックフィードしない)。
+    boot_btn = new TactSwitch_2P
+    rboot_btn = new Resistor
+    rboot_btn.resistance = 4.7kohm +/- 5%
+    rboot_btn.package = "I0402"
+    vdd_sw.hv ~ boot_btn.terminal_a
+    boot_btn.terminal_b ~> rboot_btn ~> mcu.usb_dp
+
+    # ===== 電源 LED (緑, 0603 / VDD33 常時系) =====
+    pled = new LedGreenKT0603
+    rpled = new Resistor
+    rpled.resistance = 1kohm +/- 5%
+    rpled.package = "I0402"
+    vdd33.hv ~ pled.anode
+    pled.cathode ~> rpled ~> vdd33.lv
+
+    # ===== ステータス LED (WS2812B-2020, CH32 PB0 駆動) =====
+    # 電源は VDD_SW (CH32 と同時に落ちる)。470Ω 直列で源端整合 + ESD 緩衝。
+    rgb = new LedRgbWs2812b
+    rgb.power ~ vdd_sw
+    rrgb = new Resistor
+    rrgb.resistance = 470ohm +/- 5%
+    rrgb.package = "I0402"
+    mcu.PB0 ~> rrgb ~> rgb.din
+
+    # ===== レベルシフタ A 側電源 =====
+    # A 側 (MCU 側) も VDD_SW。CH32 電源 OFF 時は VCCA=0 → 全チャネル遮断
+    # となり、ホスト側からのバックフィード経路も同時に断たれる。
+    lvls_joy.power_a ~ vdd_sw
+    lvls_joy.power_b ~ vcc_joy
+    lvls_kbd.power_a ~ vdd_sw
+    lvls_kbd.power_b ~ vcc_kbd
+
+    # ===== ジョイスティック (XH 9P → D-SUB 9pin, combined-i2c: PA0, PA2-PA7) =====
+    # ピン割当は atari-joystick 基板と同一 (firmware functions/joystick 準拠)。
+    signal up_3v3;     trait up_3v3     has_net_name<name="UP_3V3">
+    signal down_3v3;   trait down_3v3   has_net_name<name="DOWN_3V3">
+    signal left_3v3;   trait left_3v3   has_net_name<name="LEFT_3V3">
+    signal right_3v3;  trait right_3v3  has_net_name<name="RIGHT_3V3">
+    signal triga_3v3;  trait triga_3v3  has_net_name<name="TRIGA_3V3">
+    signal trigb_3v3;  trait trigb_3v3  has_net_name<name="TRIGB_3V3">
+    signal common_3v3; trait common_3v3 has_net_name<name="COMMON_3V3">
+
+    mcu.PA0 ~ common_3v3; common_3v3 ~ lvls_joy.a1; lvls_joy.b1 ~ joy.common
+    mcu.PA2 ~ right_3v3;  right_3v3  ~ lvls_joy.a2; lvls_joy.b2 ~ joy.right
+    mcu.PA3 ~ left_3v3;   left_3v3   ~ lvls_joy.a3; lvls_joy.b3 ~ joy.left
+    mcu.PA4 ~ trigb_3v3;  trigb_3v3  ~ lvls_joy.a4; lvls_joy.b4 ~ joy.trigb
+    mcu.PA5 ~ down_3v3;   down_3v3   ~ lvls_joy.a5; lvls_joy.b5 ~ joy.down
+    mcu.PA6 ~ triga_3v3;  triga_3v3  ~ lvls_joy.a6; lvls_joy.b6 ~ joy.triga
+    mcu.PA7 ~ up_3v3;     up_3v3     ~ lvls_joy.a7; lvls_joy.b7 ~ joy.up
+
+    # 予備チャネル — A 側を GND に落としてフロート回避
+    lvls_joy.a8 ~ vdd_sw.lv
+
+    joy.vcc ~ vcc_joy.hv       # D-SUB Pin5: ホスト +5V → レベルシフタ B 側電源
+    joy.gnd ~ vdd33.lv         # D-SUB シェルはケーブル側で Pin9(GND) に落とす
+
+    # ===== キーボード/マウス (XH 7P → Mini DIN 7pin, combined-i2c: PB8-PB12) =====
+    # ピン割当は x68000-keyboard 基板と同一 (firmware functions/x68k_* 準拠)。
+    signal key_txd_3v3; trait key_txd_3v3 has_net_name<name="KEY_TXD_3V3">
+    signal key_rxd_3v3; trait key_rxd_3v3 has_net_name<name="KEY_RXD_3V3">
+    signal ready_3v3;   trait ready_3v3   has_net_name<name="READY_3V3">
+    signal msdata_3v3;  trait msdata_3v3  has_net_name<name="MSDATA_3V3">
+    signal remote_3v3;  trait remote_3v3  has_net_name<name="REMOTE_3V3">
+
+    # チャネル順は DIN ピン降順 (remote=6 → msdata=2) に揃えて配線交差を減らす。
+    mcu.PB8  ~ remote_3v3;  remote_3v3  ~ lvls_kbd.a1; lvls_kbd.b1 ~ kbd.remote    # EMIT_REMOTE (SHARP12)
+    mcu.PB12 ~ ready_3v3;   ready_3v3   ~ lvls_kbd.a2; lvls_kbd.b2 ~ kbd.ready     # MCU が受信
+    mcu.PB11 ~ key_txd_3v3; key_txd_3v3 ~ lvls_kbd.a3; lvls_kbd.b3 ~ kbd.key_txd   # MCU が受信
+    mcu.PB10 ~ key_rxd_3v3; key_rxd_3v3 ~ lvls_kbd.a4; lvls_kbd.b4 ~ kbd.key_rxd   # MCU が送信
+    mcu.PB9  ~ msdata_3v3;  msdata_3v3  ~ lvls_kbd.a5; lvls_kbd.b5 ~ kbd.msdata    # MCU が送信 (マウス)
+
+    # 予備チャネル — A 側を GND に落としてフロート回避
+    lvls_kbd.a6 ~ vdd_sw.lv
+    lvls_kbd.a7 ~ vdd_sw.lv
+    lvls_kbd.a8 ~ vdd_sw.lv
+
+    kbd.vcc2 ~ vcc_kbd.hv      # DIN Pin1: ホスト +5V → レベルシフタ B 側電源
+    kbd.gnd ~ vdd33.lv         # DIN シールドはケーブル側で Pin7(GND) に落とす
+
+    # TODO: 各信号ライン (lvls_*.b* と XH コネクタの間) に TVS ダイオード
+    # アレイ (SP3012-04UTG, PESD5V0S4UD 等) を追加して ESD 保護を強化する。
+    # ケーブル化で配線が伸びるため、既存 2 基板より優先度が高い。

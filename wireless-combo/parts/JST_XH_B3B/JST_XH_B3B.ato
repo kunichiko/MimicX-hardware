@@ -1,0 +1,23 @@
+# JST XH 3P トップエントリーヘッダ (B3B-XH-A) — アトミック部品定義
+#
+# WCH-LinkE 用 SWD デバッグ端子 (SWCLK / SWDIO / GND, 2.5mm ピッチ)。
+#   JST B3B-XH-A(LF)(SN), 2.5mm ピッチ, LCSC C144394
+#
+# ⚠ フットプリントは JST XH データシート基準の仮置き (ピッチ 2.5mm /
+#   ドリル 1.0mm / 外形 9.9×5.75mm)。発注前に KiCad 側で照合すること。
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component JST_XH_B3B_package:
+    """JST XH 3 ピン トップエントリー シュラウドヘッダ (B3B-XH-A)。"""
+
+    trait is_atomic_part<manufacturer="JST", partnumber="B3B-XH-A(LF)(SN)", footprint="JST_XH_B3B.kicad_mod", symbol="JST_XH_B3B.kicad_sym", model="JST_XH_B3B.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C144394", manufacturer="JST Sales America", partno="B3B-XH-A(LF)(SN)">
+    trait has_designator_prefix<prefix="J">
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+    signal P3 ~ pin 3

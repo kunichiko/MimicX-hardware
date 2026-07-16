@@ -1,0 +1,26 @@
+from "XKB_Connectivity_TS_1187A_B_A_B/XKB_Connectivity_TS_1187A_B_A_B.ato" import XKB_Connectivity_TS_1187A_B_A_B_package
+from "XUNPU_TS_1088_AR02016/XUNPU_TS_1088_AR02016.ato" import XUNPU_TS_1088_AR02016_package
+
+
+module TactSwitch_4P:
+    """4 ピン SMD タクトスイッチ — XKB TS-1187A-B-A-B (LCSC C318884、5.1×5.1mm)。
+
+    A+B ペア と C+D ペアは内部で短絡されており、押下時に {A,B} と {C,D} が
+    導通する。ラッパーでは `terminal_a` / `terminal_b` として公開する。
+    """
+
+    chip = new XKB_Connectivity_TS_1187A_B_A_B_package
+    signal terminal_a;  terminal_a ~ chip.A; terminal_a ~ chip.B
+    signal terminal_b;  terminal_b ~ chip.C; terminal_b ~ chip.D
+
+
+module TactSwitch_2P:
+    """2 ピン SMD タクトスイッチ — XUNPU TS-1088-AR02016 (LCSC C720477、3.9×3.0×2.0mm)。
+
+    SPST モメンタリ。押下時に pin 1 ↔ pin 2 が導通する。4 ピン版と同様に
+    `terminal_a` / `terminal_b` で公開し、上位回路から互換的に扱える。
+    """
+
+    chip = new XUNPU_TS_1088_AR02016_package
+    signal terminal_a;  terminal_a ~ chip.1
+    signal terminal_b;  terminal_b ~ chip.2

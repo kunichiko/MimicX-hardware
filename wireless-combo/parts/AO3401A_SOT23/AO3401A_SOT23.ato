@@ -1,0 +1,28 @@
+# AO3401A — P-ch MOSFET (SOT-23) アトミック部品定義
+#
+# CH32 サブシステムのハイサイド電源スイッチ用。
+#   Vds=-30V, Id=-4A, Vgs(th)≈-0.9V, Rds(on)≈50mΩ @Vgs=-4.5V
+#   3.3V ゲート駆動 (Vgs=-3.3V) で十分に導通する。
+#   LCSC C15127 (Alpha & Omega Semiconductor)
+#
+# ⚠ フットプリントは標準 SOT-23 の仮置き。発注前に KiCad 側で
+#   データシート推奨ランドと照合すること。
+#
+# ピン配置 (SOT-23, データシート準拠):
+#   1: G (Gate)   2: S (Source)   3: D (Drain)
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component AO3401A_SOT23_package:
+    """P-ch MOSFET AO3401A (SOT-23)。"""
+
+    trait is_atomic_part<manufacturer="Alpha & Omega Semicon", partnumber="AO3401A", footprint="AO3401A_SOT23.kicad_mod", symbol="AO3401A_SOT23.kicad_sym", model="AO3401A_SOT23.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C15127", manufacturer="Alpha & Omega Semicon", partno="AO3401A">
+    trait has_designator_prefix<prefix="Q">
+
+    signal G ~ pin 1    # Gate
+    signal S ~ pin 2    # Source
+    signal D ~ pin 3    # Drain

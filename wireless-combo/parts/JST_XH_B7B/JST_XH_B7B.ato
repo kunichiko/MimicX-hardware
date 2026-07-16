@@ -1,0 +1,27 @@
+# JST XH 7P トップエントリーヘッダ (B7B-XH-A) — アトミック部品定義
+#
+# キーボード (Mini DIN7) へのケーブル接続用。ロック付き・逆挿し不可・3A。
+#   JST B7B-XH-A(LF)(SN), 2.5mm ピッチ, LCSC C144398
+#
+# ⚠ フットプリントは JST XH データシート基準の仮置き (ピッチ 2.5mm /
+#   ドリル 1.0mm / 外形 19.9×5.75mm)。発注前に KiCad 側で照合すること。
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component JST_XH_B7B_package:
+    """JST XH 7 ピン トップエントリー シュラウドヘッダ (B7B-XH-A)。"""
+
+    trait is_atomic_part<manufacturer="JST", partnumber="B7B-XH-A(LF)(SN)", footprint="JST_XH_B7B.kicad_mod", symbol="JST_XH_B7B.kicad_sym", model="JST_XH_B7B.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C144398", manufacturer="JST Sales America", partno="B7B-XH-A(LF)(SN)">
+    trait has_designator_prefix<prefix="J">
+
+    signal P1 ~ pin 1
+    signal P2 ~ pin 2
+    signal P3 ~ pin 3
+    signal P4 ~ pin 4
+    signal P5 ~ pin 5
+    signal P6 ~ pin 6
+    signal P7 ~ pin 7

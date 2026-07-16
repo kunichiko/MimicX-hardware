@@ -1,0 +1,23 @@
+# P-ch MOSFET ハイサイドスイッチ — ラッパーモジュール
+#
+# アトミック部品は `parts/AO3401A_SOT23/AO3401A_SOT23.ato`。
+# CH32 サブシステムの電源 (VDD_SW) を ESP32 から ON/OFF するために使う。
+
+from "AO3401A_SOT23/AO3401A_SOT23.ato" import AO3401A_SOT23_package
+
+
+module PFetHighSide:
+    """P-ch MOSFET (AO3401A) のハイサイドスイッチ用ラッパー。
+
+    使用例 (デフォルト ON, ゲート High で OFF):
+        q = new PFetHighSide
+        q.source ~ vdd33.hv       # 電源入力
+        q.drain  ~ vdd_sw.hv      # スイッチド出力
+        q.gate   ~ ctrl_gpio      # High = OFF (要ゲートプルダウン)
+    """
+
+    chip = new AO3401A_SOT23_package
+
+    signal gate;   gate   ~ chip.G
+    signal source; source ~ chip.S
+    signal drain;  drain  ~ chip.D

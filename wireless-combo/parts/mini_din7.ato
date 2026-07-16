@@ -1,0 +1,27 @@
+# Mini DIN 7pin オスコネクタ (X68000 キーボード端子) — ラッパーモジュール
+#
+# アトミック部品は `parts/MiniDIN_7P_X68000/MiniDIN_7P_X68000.ato`。本ファイルは
+# それを機能名 (vcc2 / msdata / key_rxd / key_txd / ready / remote / gnd /
+# shield) で公開する MimicX 用ラッパー。`level_shifter.ato` ↔ `TOSHIBA_...EL/`
+# と同じパターン。
+
+from "MiniDIN_7P_X68000/MiniDIN_7P_X68000.ato" import MiniDIN_7P_X68000_package
+
+
+module MiniDin7Male:
+    """Mini DIN 7pin オスコネクタの MimicX 用ラッパー。
+
+    `chip` を内包し、X68000 サービスマニュアルのピンアサインに沿った
+    機能名 (vcc2 / msdata / key_rxd / key_txd / ready / remote / gnd)
+    で公開する。
+    """
+
+    chip = new MiniDIN_7P_X68000_package
+
+    signal vcc2;    vcc2    ~ chip.P1
+    signal msdata;  msdata  ~ chip.P2
+    signal key_rxd; key_rxd ~ chip.P3
+    signal key_txd; key_txd ~ chip.P4
+    signal ready;   ready   ~ chip.P5
+    signal remote;  remote  ~ chip.P6
+    signal gnd;     gnd     ~ chip.P7
