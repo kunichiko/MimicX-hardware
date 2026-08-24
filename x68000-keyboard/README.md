@@ -2,6 +2,35 @@
 
 Mimic X — X68000 キーボードアダプタ基板 (キーボード + マウス相乗り対応)
 
+*USB-MIDI to Sharp X68000 keyboard/mouse port adapter (mini-DIN 7P, 4-layer
+board). Board rev 1.0.0, fabricated at JLCPCB. Designed in
+[atopile](https://atopile.io) — the circuit lives in
+[`x68000_keyboard.ato`](x68000_keyboard.ato), not in a schematic sheet.*
+
+<p align="center">
+  <img src="docs/images/render-top.png" width="46%" alt="component side">
+  <img src="docs/images/render-bottom.png" width="46%" alt="solder side">
+</p>
+
+- **ブロック図 / block diagram**:
+  [PDF](docs/x68000-keyboard-block-diagram.pdf) ·
+  [SVG](docs/x68000-keyboard-block-diagram.svg) — 全ブロック・全信号・電源
+  ドメイン・ピン割当を 1 枚に収めた図
+- **PCB レイヤープロット / layer plots**:
+  [PDF](docs/x68000-keyboard-pcb.pdf) (silk / Cu ×4 / fab, 8 pages)
+- **レイアウトをブラウザで**:
+  [KiCanvas](https://kicanvas.org/?repo=https%3A%2F%2Fgithub.com%2Fkunichiko%2FMimicX-hardware%2Fblob%2Fmain%2Fx68000-keyboard%2Flayouts%2Fdefault%2Fdefault.kicad_pcb)
+- **製造データ**: [`layouts/default/production/`](layouts/default/production)
+  (Gerber + BOM + CPL, JLCPCB 発注そのまま)
+- **USB VID:PID**: `0x1209:0x9210`
+
+<!-- 実機写真を撮ったら docs/images/ に置き、下の行のコメントを外す:
+<p align="center">
+  <img src="docs/images/photo-top.jpg" width="46%" alt="assembled board">
+  <img src="docs/images/photo-in-use.jpg" width="46%" alt="plugged into an X68000">
+</p>
+-->
+
 ## 用途
 
 スマートフォン (USB-MIDI ホスト) から CH32X035 経由で、X68000 のキーボード

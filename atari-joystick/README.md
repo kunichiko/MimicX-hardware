@@ -2,6 +2,34 @@
 
 Mimic X — ATARI 仕様ジョイスティックアダプタ基板
 
+*USB-MIDI to ATARI-standard 9-pin joystick adapter. Board rev 1.0.0,
+fabricated at JLCPCB. Designed in [atopile](https://atopile.io) — the circuit
+lives in [`atari_joystick.ato`](atari_joystick.ato), not in a schematic sheet.*
+
+<p align="center">
+  <img src="docs/images/render-top.png" width="46%" alt="component side">
+  <img src="docs/images/render-bottom.png" width="46%" alt="solder side">
+</p>
+
+- **ブロック図 / block diagram**:
+  [PDF](docs/atari-joystick-block-diagram.pdf) ·
+  [SVG](docs/atari-joystick-block-diagram.svg) — 全ブロック・全信号・電源
+  ドメイン・ピン割当を 1 枚に収めた図
+- **PCB レイヤープロット / layer plots**:
+  [PDF](docs/atari-joystick-pcb.pdf) (silk / Cu / fab, 6 pages)
+- **レイアウトをブラウザで**:
+  [KiCanvas](https://kicanvas.org/?repo=https%3A%2F%2Fgithub.com%2Fkunichiko%2FMimicX-hardware%2Fblob%2Fmain%2Fatari-joystick%2Flayouts%2Fdefault%2Fdefault.kicad_pcb)
+- **製造データ**: [`layouts/default/production/`](layouts/default/production)
+  (Gerber + BOM + CPL, JLCPCB 発注そのまま)
+- **USB VID:PID**: `0x1209:0x9210`
+
+<!-- 実機写真を撮ったら docs/images/ に置き、下の行のコメントを外す:
+<p align="center">
+  <img src="docs/images/photo-top.jpg" width="46%" alt="assembled board">
+  <img src="docs/images/photo-in-use.jpg" width="46%" alt="plugged into an X68000">
+</p>
+-->
+
 ## 用途
 
 スマートフォン (USB-MIDI ホスト) から CH32X035 経由で、ATARI / メガドライブ 6

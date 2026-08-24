@@ -1,5 +1,18 @@
 # MimicX Wireless Combo Adapter (XIAO ESP32-C6 + CH32X035)
 
+*BLE-MIDI wireless Combined adapter: an ESP32-C6 takes MIDI in over BLE or USB
+and relays it to a CH32X035 device engine over I2C, driving both retro ports
+from one board. **Board rev 0.1 — the circuit is settled, the layout is not yet
+routed**, so there are no renders or layer plots here yet. Designed in
+[atopile](https://atopile.io); the circuit lives in
+[`wireless_combo.ato`](wireless_combo.ato).*
+
+- **ブロック図 / block diagram**:
+  [PDF](docs/wireless-combo-block-diagram.pdf) ·
+  [SVG](docs/wireless-combo-block-diagram.svg)
+- **USB VID:PID**: `0x1209:0x9211` (Mimic X Bridge — 無線側は ESP32 が USB
+  デバイスとして見えるため、有線 2 基板とは別 PID)
+
 BLE-MIDI 無線対応の Combined アダプタ。1 枚の基板に
 
 - **Seeed XIAO ESP32-C6** — BLE-MIDI ホスト / CH32 の自動 OTA (SWD) / 電源・BOOT 制御
