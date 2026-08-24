@@ -9,8 +9,12 @@ computers — the Sharp X68000 keyboard/mouse port and the ATARI-standard
 the board designs; the firmware, the protocol spec and the phone app live in the
 sibling repositories linked at the bottom.*
 
-- **Licence**: MIT (see [`LICENSE`](LICENSE)) — schematics, layouts and the
-  part libraries are all modifiable sources.
+- **Licence**: **CERN-OHL-S-2.0** (see [`LICENSE`](LICENSE)) — the `.ato`
+  sources, the KiCad layouts and the docs are all modifiable sources.
+  `tools/` is Apache-2.0. Vendor-supplied symbols, footprints and 3D models
+  under `<board>/parts/` are third-party and are **not** covered; see
+  [`NOTICE`](NOTICE) for the exact carve-out, the trademark terms and the
+  datasheet policy.
 - **MCU**: WCH **CH32X035G8U6** (QFN-28, RISC-V, 48 MHz, native USB 2.0 FS).
 - **USB VID:PID**: `0x1209:0x9210` (Mimic X) and `0x1209:0x9211` (Mimic X
   Bridge), [requested from pid.codes](https://github.com/pidcodes/pidcodes.github.com/pull/1210).

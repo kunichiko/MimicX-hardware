@@ -1,0 +1,123 @@
+Mimic X — hardware
+Copyright 2026 Kunihiko Ohnaka
+
+
+ライセンス
+------------------------------------------------------------------------
+このリポジトリの基板設計データは CERN Open Hardware Licence Version 2 -
+Strongly Reciprocal (CERN-OHL-S-2.0) で提供されます。全文は ./LICENSE を
+参照してください。
+
+  <board>/*.ato                       CERN-OHL-S-2.0  (./LICENSE)
+  <board>/parts/**/*.ato              CERN-OHL-S-2.0
+  <board>/layouts/                    CERN-OHL-S-2.0
+  docs/, <board>/docs/, README.md     CERN-OHL-S-2.0
+  tools/                              Apache License 2.0
+
+tools/ はドキュメント生成スクリプトであり基板設計そのものではないため、
+再利用しやすいよう Apache License 2.0 とします。
+
+姉妹リポジトリのライセンス:
+
+  MimicX-firmware   Apache License 2.0
+  MimicX-app        Apache License 2.0
+  MimicX-protocol   CC BY 4.0   (相互運用仕様のため継承条件を付けない)
+
+
+商標について
+------------------------------------------------------------------------
+以下は CERN-OHL-S-2.0 の許諾範囲には含まれません。
+
+  "Mimic X"     正式名称
+  "MimicX"      短縮形 (リポジトリ名・ファイル名・識別子等で用いる)
+  基板シルク上のブランド表記
+                ("Mimic X Adapter" および "Developed by @kunichiko")
+
+大文字小文字の違い、空白の有無、およびこれらと混同を生じるおそれのある
+表記を含みます。
+
+本設計に基づくハードウェアを頒布・販売する場合は、これらとは異なる名称を
+用いてください。公式版との混同を避け、利用者がサポートの出所を判断できる
+ようにするための措置です。
+
+
+USB VID / PID
+------------------------------------------------------------------------
+  0x1209:0x9210   Mimic X
+  0x1209:0x9211   Mimic X Bridge
+
+pid.codes (https://pid.codes) に申請中です
+(https://github.com/pidcodes/pidcodes.github.com/pull/1210)。
+
+本設計を改変したハードウェアを頒布する場合、これらの PID をそのまま用いると
+USB 機器の識別が衝突し、ホスト側のドライバやアプリが誤動作します。pid.codes
+から自分の PID を取得してください。
+
+
+ライセンスの対象外となるファイル
+------------------------------------------------------------------------
+<board>/parts/ 配下には、部品ベンダー由来のシンボル・フットプリント・3D
+モデルが含まれます。これらは第三者が著作権を有し、本プロジェクトの権利者が
+ライセンスを付与できる範囲にありません。各権利者の条件に従ってください。
+
+対象は、下記「自作の部品」に挙げたディレクトリを除く <board>/parts/ 内の
+
+  *.kicad_sym
+  *.kicad_mod
+  *.step, *.STEP
+
+すべてです。これらは LCSC / EasyEDA の部品データを atopile (faebryk) が
+変換したもの、およびそれを KiCad で調整した派生物です。KiCad の footprint
+editor で保存し直すと generator フィールドが "pcbnew" に書き換わるため、
+generator の値では由来を判別できません (git 履歴が一次情報です)。
+
+  # 由来を確かめる
+  git log --follow --format='%h %s' -- <path/to/file>
+  git show $(git log --format=%H --follow -- <path> | tail -1):<path> \
+      | grep -m1 generator
+
+同ディレクトリ内の <part>.ato は、部品を Mimic X の回路に接続するための
+手書きラッパであり、すべて CERN-OHL-S-2.0 の対象です。
+
+
+自作の部品 (CERN-OHL-S-2.0 の対象)
+------------------------------------------------------------------------
+以下のディレクトリはベンダーデータを持たない部品のため、シンボル・
+フットプリント・ラッパ .ato のすべてを一から作成しています。全 git 履歴に
+faebryk_convert の混入がないことを確認済みです。
+
+  <board>/parts/AO3401A_SOT23/
+  <board>/parts/JST_XH_B3B/
+  <board>/parts/JST_XH_B7B/
+  <board>/parts/JST_XH_B9B/
+  <board>/parts/MiniDIN_7P_X68000/
+  <board>/parts/SS14_SMA/
+  <board>/parts/XIAO_ESP32C6/
+
+MiniDIN_7P_X68000 は X68000 のキーボード端子に合わせて実測から作成した
+フットプリントで、既製のライブラリには相当品がありません。
+
+
+データシート
+------------------------------------------------------------------------
+部品メーカーが発行するデータシート (PDF) は、再配布可否が不明なため
+このリポジトリには含めていません。入手元 URL は各 <part>.ato の
+has_datasheet トレイトに記載があり、一覧を以下にまとめています。
+
+  atari-joystick/parts/README.md
+  x68000-keyboard/parts/README.md
+  wireless-combo/parts/README.md
+
+atopile は必要に応じて <board>/build/cache/ に自動取得します
+(git 管理外)。
+
+
+第三者成果物の参照について
+------------------------------------------------------------------------
+CH32X035 の USB / ピン割当に関する設計判断は、WCH のデータシートおよび
+リファレンスマニュアルを典拠としています。ブートローダ突入条件 (リセット時に
+PC17 = UDP が High) は WCH の ISP 仕様に基づき、実機で検証したものです。
+
+X68000 キーボード端子のピンアサインと通信条件 (キーボード 2400 8N1 /
+マウス 4800 8N2) はシャープのサービスマニュアルを典拠とし、実機での動作確認に
+より確定しました。回路図・レイアウトデータの複製は行っていません。

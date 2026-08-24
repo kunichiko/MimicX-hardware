@@ -189,7 +189,7 @@ def build_single_mcu(*, title, subtitle, pid, conn_title, conn_body,
                      notes_left, notes_right, host_rail) -> Svg:
     s = Svg()
     s.header(title, subtitle,
-             ["board rev 1.0.0   ·   MIT licence",
+             ["board rev 1.0.0   ·   CERN-OHL-S-2.0",
               f"USB VID:PID  {pid}", REPO])
 
     s.panel(44, 108, 300, notes_left[0], notes_left[1], bullet=True)
