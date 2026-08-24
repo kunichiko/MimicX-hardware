@@ -17,8 +17,7 @@ Photographs of the assembled board go here too. Use these names so the links in
 
 | file | what |
 |---|---|
-| `photo-top.jpg` | assembled board, component side |
-| `photo-bottom.jpg` | assembled board, solder side |
-| `photo-in-use.jpg` | plugged into the real machine |
+| `atari-joystick-photo.jpg` | assembled board next to its 3D-printed shell (in use) |
+| `atari-joystick-photo-in-use.jpg` | plugged into the real machine (not taken yet) |
 
 Keep each one under ~1 MB (1600 px on the long edge is plenty for a README).

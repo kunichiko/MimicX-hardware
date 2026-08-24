@@ -8,9 +8,15 @@ board). Board rev 1.0.0, fabricated at JLCPCB. Designed in
 [`x68000_keyboard.ato`](x68000_keyboard.ato), not in a schematic sheet.*
 
 <p align="center">
-  <img src="docs/images/render-top.png" width="46%" alt="component side">
-  <img src="docs/images/render-bottom.png" width="46%" alt="solder side">
+  <img src="docs/images/x68000-keyboard-photo.jpg" width="72%" alt="assembled mini-DIN 7P keyboard adapter, with and without its 3D-printed shell">
 </p>
+<p align="center"><sub>実装済みの基板と 3D プリントのケース (背景はカッティングマット)</sub></p>
+
+<p align="center">
+  <img src="docs/images/render-top.png" width="46%" alt="layout, component side">
+  <img src="docs/images/render-bottom.png" width="46%" alt="layout, solder side">
+</p>
+<p align="center"><sub>KiCad レイアウトの 3D レンダ (部品面 / はんだ面)</sub></p>
 
 - **ブロック図 / block diagram**:
   [PDF](docs/x68000-keyboard-block-diagram.pdf) ·
@@ -24,12 +30,6 @@ board). Board rev 1.0.0, fabricated at JLCPCB. Designed in
   (Gerber + BOM + CPL, JLCPCB 発注そのまま)
 - **USB VID:PID**: `0x1209:0x9210`
 
-<!-- 実機写真を撮ったら docs/images/ に置き、下の行のコメントを外す:
-<p align="center">
-  <img src="docs/images/photo-top.jpg" width="46%" alt="assembled board">
-  <img src="docs/images/photo-in-use.jpg" width="46%" alt="plugged into an X68000">
-</p>
--->
 
 ## 用途
 

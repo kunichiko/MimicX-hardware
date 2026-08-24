@@ -26,9 +26,10 @@ D-SUB 9pin メス。X68000 / ATARI 標準ポートに直挿しし、メガドラ
 パッドもエミュレートする。**rev 1.0.0、JLCPCB で製造済み。**
 
 <p align="center">
-  <img src="atari-joystick/docs/images/render-top.png" width="46%" alt="atari-joystick, component side">
-  <img src="atari-joystick/docs/images/render-bottom.png" width="46%" alt="atari-joystick, solder side">
+  <img src="atari-joystick/docs/images/atari-joystick-photo.jpg" width="46%" alt="assembled atari-joystick board, with and without its 3D-printed shell">
+  <img src="atari-joystick/docs/images/render-top.png" width="46%" alt="atari-joystick layout, component side">
 </p>
+<p align="center"><sub>実装済みの基板と 3D プリントのケース (左) / KiCad レイアウトの 3D レンダ (右)。裏面と拡大は <a href="atari-joystick/README.md">基板 README</a> を参照</sub></p>
 
 | | |
 |---|---|
@@ -45,9 +46,10 @@ D-SUB 9pin メス。X68000 / ATARI 標準ポートに直挿しし、メガドラ
 1 コネクタで両方をエミュレートする。4 層。**rev 1.0.0、JLCPCB で製造済み。**
 
 <p align="center">
-  <img src="x68000-keyboard/docs/images/render-top.png" width="46%" alt="x68000-keyboard, component side">
-  <img src="x68000-keyboard/docs/images/render-bottom.png" width="46%" alt="x68000-keyboard, solder side">
+  <img src="x68000-keyboard/docs/images/x68000-keyboard-photo.jpg" width="46%" alt="assembled x68000-keyboard board, with and without its 3D-printed shell">
+  <img src="x68000-keyboard/docs/images/render-top.png" width="46%" alt="x68000-keyboard layout, component side">
 </p>
+<p align="center"><sub>実装済みの基板と 3D プリントのケース (左) / KiCad レイアウトの 3D レンダ (右)。裏面と拡大は <a href="x68000-keyboard/README.md">基板 README</a> を参照</sub></p>
 
 | | |
 |---|---|
