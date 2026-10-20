@@ -1,0 +1,209 @@
+#pragma experiment("BRIDGE_CONNECT")
+
+import ElectricPower
+import Resistor
+import Capacitor
+import has_net_name
+
+from "parts/ch32x035.ato" import CH32X035G8U6
+from "parts/usb_type_c.ato" import UsbTypeC_16P
+from "parts/dsub9.ato" import DSub9FemaleSolderCup
+from "parts/buttons.ato" import TactSwitch_2P
+from "parts/ldo_3v3.ato" import Ldo3V3
+from "parts/level_shifter.ato" import LevelShifter8Bit
+from "parts/leds.ato" import LedGreenKT0603
+from "parts/leds.ato" import LedRgbWs2812b
+
+
+module AtariJoystickSlim:
+    """
+    Mimic X — ATARI ジョイスティックアダプタ (スリム版)。
+
+    回路は atari-joystick (v1.0.0) と同一。D-SUB 9pin を基板実装品から
+    「金属シェルを外したハンダカップ型の樹脂ブロック」に替え、基板エッジの
+    表 5 / 裏 4 パッドをハンダカップの列の間に差し込んではんだ付けする。
+    MSX / FM TOWNS のジョイスティック端子は筐体の奥にあり、スリムな
+    コネクタしか届かないため、基板幅もコネクタ幅程度まで絞る
+    (x68000-keyboard と同じ形態)。
+
+    USB Type-C (sink/UFP)  ──>  CH32X035G8U6 (MCU, USB FS, 3.3V)
+                                       ↕  TC7MPB9307FT (5V↔3.3V level shifter)
+                              ──>  D-SUB 9pin (X68000 / ATARI 標準, 5V)
+
+    電源構成: USB バスパワー (VBUS, 5V) から LDO で MCU 用 VDD33 (3.3V) を
+    生成し、レベルシフタの B 側 (5V) はホスト側 D-SUB Pin 5 から供給される
+    VCC_HOST を直接受ける。VBUS と VCC_HOST は基板内では分離され、逆流リスク
+    を回避する。X68000 / メガドライブはどちらも Pin 5 で +5V を供給する。
+
+    ピン割当・設計理由は README.md と docs/CH32X035.md を参照。
+    """
+
+    # ===== トップレベル電源レール =====
+    vbus = new ElectricPower    # USB バスパワー (5V)
+    # ネット名を既定の "hv" / "lv" ではなく可読な名前に固定する。
+    trait vbus.hv has_net_name<name="VBUS">
+    trait vbus.lv has_net_name<name="GND">
+
+    # MCU 用 3.3V レール。CH32X035 の USB トランシーバ出力は VDD 直結のため、
+    # USB ホスト互換性 (特に Pixel 等の規格準拠ホスト) の観点から VDD は必ず
+    # 3.3V に降圧する。詳細は docs/CH32X035.md と parts/ldo_3v3.ato を参照。
+    vdd33 = new ElectricPower
+    trait vdd33.hv has_net_name<name="VDD33">
+    trait vdd33.lv has_net_name<name="GND">
+
+    # ホスト側 +5V (D-SUB Pin 5) 用電源レール。レベルシフタ B 側 (VCCB) の
+    # 電源として使う。VBUS とは分離してホスト電位と完全に整合させる。
+    vcc_host = new ElectricPower
+    trait vcc_host.hv has_net_name<name="VCC_HOST">
+    trait vcc_host.lv has_net_name<name="GND">
+
+    # ===== サブブロック =====
+    mcu  = new CH32X035G8U6
+    usbc = new UsbTypeC_16P
+    joy  = new DSub9FemaleSolderCup
+    ldo  = new Ldo3V3
+    lvls = new LevelShifter8Bit    # 5V <-> 3.3V レベルシフタ (TC7MPB9307FT)
+
+    # ===== USB Type-C: 5.1kΩ CC プルダウン (UFP / sink) + MCU PD 検出 =====
+    # 5.1kΩ プルダウンは UFP/sink 識別用 (USB Type-C 仕様の Rd)。加えて
+    # CH32X035 の内蔵 USB-PD コントローラが CC ラインを直接サンプリングできる
+    # よう、PC14 (CC1) / PC15 (CC2) を CC ネットに直接接続する。プルダウン経由で
+    # 5V 系の Rp 分圧 (max ~1.7V @ 3A 広告) しか印加されないため、MCU の絶対
+    # 最大定格 (VDD+0.3V = 3.6V) は満たされる。
+    rcc1 = new Resistor
+    rcc1.resistance = 5.1kohm +/- 5%
+    rcc1.package = "I0402"
+    usbc.cc1 ~> rcc1 ~> vbus.lv
+    mcu.PC14 ~ usbc.cc1
+
+    rcc2 = new Resistor
+    rcc2.resistance = 5.1kohm +/- 5%
+    rcc2.package = "I0402"
+    usbc.cc2 ~> rcc2 ~> vbus.lv
+    mcu.PC15 ~ usbc.cc2
+
+    # ===== USB 電源とデータ =====
+    usbc.vbus ~ vbus.hv
+    usbc.gnd  ~ vbus.lv
+    usbc.shell ~ vbus.lv
+
+    # ===== 5V (VBUS) -> 3.3V (VDD33) LDO =====
+    ldo.power_in  ~ vbus
+    ldo.power_out ~ vdd33
+
+    # MCU は 3.3V で駆動 (USB トランシーバの D+/D- 出力レベルを 3.3V に揃える)
+    mcu.vdd ~ vdd33.hv
+    mcu.vss ~ vdd33.lv
+
+    # USB D+/D- — できるだけ短く、90Ω 差動配線が望ましい。
+    # TODO: コモンモードチョーク + ESD TVS アレイ (USBLC6-2SC6 等) を追加する。
+    usbc.dp ~ mcu.usb_dp
+    usbc.dn ~ mcu.usb_dm
+
+    # ===== VDD33 デカップリング (MCU の VDD ピン直近に配置) =====
+    cbulk = new Capacitor
+    cbulk.capacitance = 4.7uF +/- 20%
+    cbulk.package = "I0603"
+    cbulk.power ~ vdd33
+
+    cdec = new Capacitor
+    cdec.capacitance = 100nF +/- 10%
+    cdec.package = "I0402"
+    cdec.power ~ vdd33
+
+    # ===== 電源 LED (緑, 0603 / 常時点灯) =====
+    # VDD33 = 3.3V, Vf ≈ 2.0V, 電流 ~1.3mA を狙って 1kΩ。電源インジケータ
+    # 用途なので低電流に絞り、消費電力を抑える。
+    pled = new LedGreenKT0603
+    rpled = new Resistor
+    rpled.resistance = 1kohm +/- 5%
+    rpled.package = "I0402"
+    vdd33.hv ~ pled.anode
+    pled.cathode ~> rpled ~> vdd33.lv
+
+    # ===== フルカラー LED (WS2812B-2020, シリアル制御 RGB) =====
+    # PB0 (QFN28 pin 13) から DI を駆動。WS2812 プロトコル (800 kHz / 24bit
+    # GRB) で点灯色を任意に変更可能。電源は VDD33 を共有 (WS2812B-2020 は
+    # 3.3V 動作可、データ閾値 VIH ≈ 0.7×VDD)。
+    #
+    # DI 直前に 470Ω 直列ダンピング抵抗を入れて源端整合 (反射制動) と ESD
+    # 緩衝を取る。抵抗は MCU 側に寄せて配置することで効果が最大化する。
+    rgb = new LedRgbWs2812b
+    rgb.power ~ vdd33
+    rrgb = new Resistor
+    rrgb.resistance = 470ohm +/- 5%
+    rrgb.package = "I0402"
+    mcu.PB0 ~> rrgb ~> rgb.din
+
+    # ===== BOOT ボタン — リセット時に PC17 (USB D+) を HIGH に引き上げる =====
+    # WCH ISP ブートローダ仕様: リセット時 UDP (PC17) が HIGH なら MCU は
+    # USB DFU ブートローダに入る。4.7kΩ 直列抵抗で USB データラインと電源を
+    # 分離し、通常の USB enumeration ではホスト側が D+ を駆動できるようにする。
+    #
+    # 重要: ここは VBUS (5V) ではなく VDD33 (3.3V) を使う。USB D+ アイドル電圧は
+    # VDD レベル (= 3.3V) であるため、5V を印加すると規格違反となり、Pixel 等の
+    # 規格準拠ホストで attach できなくなる。
+    #
+    # VDD33 ── btn ── 4.7kΩ ── PC17 (mcu.usb_dp)
+    boot_btn = new TactSwitch_2P
+    rboot = new Resistor
+    rboot.resistance = 4.7kohm +/- 5%
+    rboot.package = "I0402"
+    vdd33.hv ~ boot_btn.terminal_a
+    boot_btn.terminal_b ~> rboot ~> mcu.usb_dp
+
+    # ===== レベルシフタ (TC7MPB9307FT) — MCU 3.3V 側 と D-SUB 5V 側を分離 =====
+    # 重要: CH32X035 は 5V トレラントでない (絶対最大定格 VIN ≤ VDD+0.3V =
+    # 3.6V at VDD=3.3V)。X68000 側の 5V 信号 (8255 push-pull の COMMON、
+    # 方向/トリガ線のホスト側プルアップ 5V) と直結すると MCU ピンが定格を
+    # 超え破損する。TC7MPB9307FT (パッシブ FET バススイッチ) で A=VDD33 /
+    # B=VCC_HOST に分離し、MCU には常に 3.3V クランプされた信号のみ届くようにする。
+    # 8 チャネル中 7 ch を使用、a8/b8 は予備 (a8 を GND に固定)。
+    lvls.power_a ~ vdd33     # A 側 = MCU の 3.3V
+    lvls.power_b ~ vcc_host  # B 側 = ホスト (X68000 / MD) の +5V (D-SUB Pin 5)
+
+    # ===== D-SUB 9pin ジョイスティック出力 (ATARI / X68000 標準) =====
+    # 方向/トリガ線: 8255 入力 + ホスト側プルアップ 5V に対する open-drain 動作。
+    # MCU は通常の push-pull で 0V/3.3V を駆動するだけで OK。バススイッチ経由で
+    #   MCU=0V → 5V 側 0V (FET ON で引き下げ)
+    #   MCU=3.3V → 5V 側はホストのプルアップで 5V に復元 (FET 自動 OFF)
+    # となり、ホスト側から見ると従来の open-drain ポートと同じ振る舞いになる。
+    #
+    # 3.3V 側ネットに用途名を与えておき、KiCad の回路図 / ネットリスト / BOM
+    # 上も "UP_3V3" のような意味のある名前で見えるようにする。
+    signal up_3v3;     trait up_3v3     has_net_name<name="UP_3V3">
+    signal down_3v3;   trait down_3v3   has_net_name<name="DOWN_3V3">
+    signal left_3v3;   trait left_3v3   has_net_name<name="LEFT_3V3">
+    signal right_3v3;  trait right_3v3  has_net_name<name="RIGHT_3V3">
+    signal triga_3v3;  trait triga_3v3  has_net_name<name="TRIGA_3V3">
+    signal trigb_3v3;  trait trigb_3v3  has_net_name<name="TRIGB_3V3">
+    signal common_3v3; trait common_3v3 has_net_name<name="COMMON_3V3">
+
+    mcu.PA7 ~ up_3v3;    up_3v3    ~ lvls.a8; lvls.b8 ~ joy.up
+    mcu.PA5 ~ down_3v3;  down_3v3  ~ lvls.a6; lvls.b6 ~ joy.down
+    mcu.PA3 ~ left_3v3;  left_3v3  ~ lvls.a4; lvls.b4 ~ joy.left
+    mcu.PA2 ~ right_3v3; right_3v3 ~ lvls.a2; lvls.b2 ~ joy.right
+    mcu.PA6 ~ triga_3v3; triga_3v3 ~ lvls.a7; lvls.b7 ~ joy.triga
+    mcu.PA4 ~ trigb_3v3; trigb_3v3 ~ lvls.a5; lvls.b5 ~ joy.trigb
+
+    # COMMON / TH (ホスト 8255 push-pull 出力 → MCU 入力) — MD 6 ボタンの MUX
+    # 切替検出を TIM2_CH1 で実施。バススイッチ経由で MCU には 0V/3.3V クランプ
+    # 済みの信号が届くため、CH32X035 の絶対最大定格を満たしたまま受けられる。
+    mcu.PA0 ~ common_3v3; common_3v3 ~ lvls.a1; lvls.b1 ~ joy.common
+
+    # 予備チャネル (Ch.1) — A 側を GND に落としてフローティング回避
+    lvls.a3 ~ vdd33.lv
+
+    # TODO: D-SUB 各ピン (lvls.b1〜b7 と joy 側の間) に TVS ダイオードアレイ
+    # (例: SP3012-04UTG, PESD5V0S4UD など) を追加して ESD 保護を強化する。
+    # 特に COMMON は外部ケーブル経由でホスト 8255 に直結するため重要。
+
+    # ホストと共通 GND
+    joy.gnd ~ vbus.lv
+
+    # D-SUB の金属シェルは取り外して使うため、シェル接続は持たない。
+
+    # Pin 5 (ホストからの +5V): VCC_HOST レールに接続し、レベルシフタ B 側
+    # (VCCB) の電源として使う。VBUS とは基板内では分離されているため、ホスト
+    # 側電源と USB バスパワーが同時にあっても逆流しない。
+    joy.vcc ~ vcc_host.hv

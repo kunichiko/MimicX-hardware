@@ -87,6 +87,7 @@ generator の値では由来を判別できません (git 履歴が一次情報�
 faebryk_convert の混入がないことを確認済みです。
 
   <board>/parts/AO3401A_SOT23/
+  <board>/parts/DSUB9_SolderCup_Edge/
   <board>/parts/JST_XH_B3B/
   <board>/parts/JST_XH_B7B/
   <board>/parts/JST_XH_B9B/
@@ -96,6 +97,8 @@ faebryk_convert の混入がないことを確認済みです。
 
 MiniDIN_7P_X68000 は X68000 のキーボード端子に合わせて実測から作成した
 フットプリントで、既製のライブラリには相当品がありません。
+DSUB9_SolderCup_Edge は金属シェルを外したハンダカップ型 D-SUB 9pin の
+カップ列の間に基板エッジを差し込むためのエッジパッドで、同じく自作です。
 
 
 データシート
@@ -105,6 +108,7 @@ MiniDIN_7P_X68000 は X68000 のキーボード端子に合わせて実測から
 has_datasheet トレイトに記載があり、一覧を以下にまとめています。
 
   atari-joystick/parts/README.md
+  atari-joystick-slim/parts/README.md
   x68000-keyboard/parts/README.md
   wireless-combo/parts/README.md
 

@@ -1,0 +1,39 @@
+from "DSUB9_SolderCup_Edge/DSUB9_SolderCup_Edge.ato" import DSUB9_SolderCup_Edge_package
+
+
+module DSub9FemaleSolderCup:
+    """D-SUB 9pin **メス** コネクタ (ハンダカップ型の樹脂ブロックを基板エッジに
+    直付け)。X68000 / MSX / FM TOWNS のホスト側ポートはオスなので、当アダプタ
+    側はメス。金属シェルは外して使う (筐体奥のポートに届くスリム形状にする
+    ため) ので、シェル接続は持たない。
+
+    ピン配置 (コネクタ嵌合面から見たメス):
+
+        5 4 3 2 1     (オスとは左右が反転、ピン 1 が右)
+         9 8 7 6
+
+    基板側 (ハンダカップ側から見る) では左右が逆になり、表 = 1〜5、
+    裏 = 6〜9 が左から並ぶ。詳細は DSUB9_SolderCup_Edge.ato を参照。
+
+    ATARI / X68000 標準ジョイスティックポートのピンアサイン:
+        1: Up         6: TRIG-A
+        2: Down       7: TRIG-B
+        3: Left       8: COMMON / TH (MD 6 ボタン MUX)
+        4: Right      9: GND
+        5: +5V (ホスト給電。通常 NC)
+
+    各信号はピン番号ではなく機能名 (up/down/.../triga/trigb/common/gnd) で
+    公開する。
+    """
+
+    chip = new DSUB9_SolderCup_Edge_package
+
+    signal up;     up     ~ chip.P1
+    signal down;   down   ~ chip.P2
+    signal left;   left   ~ chip.P3
+    signal right;  right  ~ chip.P4
+    signal vcc;    vcc    ~ chip.P5
+    signal triga;  triga  ~ chip.P6
+    signal trigb;  trigb  ~ chip.P7
+    signal common; common ~ chip.P8
+    signal gnd;    gnd    ~ chip.P9
