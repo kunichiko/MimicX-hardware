@@ -981,7 +981,7 @@
 		(layer "Edge.Cuts")
 		(uuid "fbf3e6c6-97e8-4df6-a43b-81d327adb6cd")
 	)
-	(gr_text "${REVISION} by @kunichiko"
+	(gr_text "${BOARD_REV} by @kunichiko"
 		(at 107.75 100 270)
 		(layer "F.SilkS")
 		(uuid "4bbd725a-fe88-4315-8cd4-63f7256e7883")

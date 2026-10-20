@@ -344,7 +344,9 @@
     "top_level_sheets": []
   },
   "sheets": [],
-  "text_variables": {},
+  "text_variables": {
+    "BOARD_REV": "v1.0.0"
+  },
   "tuning_profiles": {
     "meta": {
       "version": 0

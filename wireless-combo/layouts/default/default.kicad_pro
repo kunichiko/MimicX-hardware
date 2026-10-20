@@ -303,5 +303,7 @@
     "legacy_lib_list": []
   },
   "sheets": [],
-  "text_variables": {}
+  "text_variables": {
+    "BOARD_REV": "v1.0.0"
+  }
 }

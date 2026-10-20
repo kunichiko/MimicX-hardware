@@ -989,7 +989,7 @@
 			)
 		)
 	)
-	(gr_text "${REVISION} by @kunichiko"
+	(gr_text "${BOARD_REV} by @kunichiko"
 		(at 156.8128 96 270)
 		(layer "F.SilkS")
 		(uuid "383a4bce-c2ed-45a5-93c1-97ca378a288c")

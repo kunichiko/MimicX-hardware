@@ -10376,7 +10376,7 @@
 			)
 		)
 	)
-	(gr_text "${REVISION} Developed by @kunichiko"
+	(gr_text "${BOARD_REV} Developed by @kunichiko"
 		(at 117.75 85.5 270)
 		(layer "F.SilkS")
 		(uuid "9267263f-b72b-4dc0-8fe5-9197184ab950")
