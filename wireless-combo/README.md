@@ -2,8 +2,8 @@
 
 *BLE-MIDI wireless Combined adapter: an ESP32-C6 takes MIDI in over BLE or USB
 and relays it to a CH32X035 device engine over I2C, driving both retro ports
-from one board. **Board rev 0.1 — the circuit is settled, the layout is not yet
-routed**, so there are no renders or layer plots here yet. Designed in
+from one board. **Board rev 0.1 — routed (4-layer, DRC clean), not yet
+fabricated**; renders and layer plots are not here yet. Designed in
 [atopile](https://atopile.io); the circuit lives in
 [`wireless_combo.ato`](wireless_combo.ato).*
 
