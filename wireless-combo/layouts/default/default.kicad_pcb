@@ -7,6 +7,10 @@
 		(legacy_teardrops no)
 	)
 	(paper "A4")
+	(title_block
+		(title "MimicX-combo")
+		(rev "v1.0.0")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(4 "In1.Cu" signal)
@@ -10372,7 +10376,7 @@
 			)
 		)
 	)
-	(gr_text "v1.0.0 Developed by @kunichiko"
+	(gr_text "${REVISION} Developed by @kunichiko"
 		(at 117.75 85.5 270)
 		(layer "F.SilkS")
 		(uuid "9267263f-b72b-4dc0-8fe5-9197184ab950")

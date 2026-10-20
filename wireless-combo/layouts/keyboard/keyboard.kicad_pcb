@@ -7,6 +7,10 @@
 		(legacy_teardrops no)
 	)
 	(paper "A4")
+	(title_block
+		(title "MimicX-breakout-x68000-keyboard")
+		(rev "v1.0.0")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(2 "B.Cu" signal)
@@ -647,6 +651,7 @@
 		(property "Reference" "J2"
 			(at 0 -10 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "00000000-0000-0000-0000-000000000002")
 			(effects
 				(font
@@ -984,7 +989,7 @@
 			)
 		)
 	)
-	(gr_text "v1.0.0 by @kunichiko"
+	(gr_text "${REVISION} by @kunichiko"
 		(at 156.8128 96 270)
 		(layer "F.SilkS")
 		(uuid "383a4bce-c2ed-45a5-93c1-97ca378a288c")

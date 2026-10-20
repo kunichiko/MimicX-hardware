@@ -7,6 +7,10 @@
 		(legacy_teardrops no)
 	)
 	(paper "A4")
+	(title_block
+		(title "MimicX-breakout-atari-joystick")
+		(rev "v1.0.0")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(2 "B.Cu" signal)
@@ -977,7 +981,7 @@
 		(layer "Edge.Cuts")
 		(uuid "fbf3e6c6-97e8-4df6-a43b-81d327adb6cd")
 	)
-	(gr_text "v1.0.0 by @kunichiko"
+	(gr_text "${REVISION} by @kunichiko"
 		(at 107.75 100 270)
 		(layer "F.SilkS")
 		(uuid "4bbd725a-fe88-4315-8cd4-63f7256e7883")
