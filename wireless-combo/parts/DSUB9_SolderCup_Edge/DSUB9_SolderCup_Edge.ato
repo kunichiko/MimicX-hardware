@@ -1,0 +1,42 @@
+# D-SUB 9pin メス (ハンダカップ型・金属シェル除去) — アトミック部品定義
+#
+# 自作部品。市販のハンダカップ型 D-SUB 9pin メスから金属シェルをペンチで
+# 外し、樹脂ブロック (端子部) だけを使う。基板エッジの表 5 / 裏 4 パッドを
+# ハンダカップの上下の列の間に差し込み、カップと直接はんだ付けする
+# (1.6mm 厚の基板が列の間に入ることは実物で確認済み)。基板実装部品では
+# ないので BOM / CPL からは外し、手はんだで後付けする。
+#
+# フットプリント座標系:
+#   y = 0 が基板エッジ (= 樹脂ブロックの背面)。コネクタは -y 側、基板は +y 側。
+#   パッドはピッチ 2.77mm、1.5 x 4.0mm、エッジから 0.3mm 内側に置く。
+#   表 (F.Cu): 1 2 3 4 5   ← ハンダカップ側から見た並び (嵌合面とは左右逆)
+#   裏 (B.Cu):  6 7 8 9      (部品面から透視した位置。6 は 1 と 2 の間)
+#
+# ピン番号と信号の対応 (ATARI / X68000 標準):
+#   1: Up      4: Right        7: TRIG-B
+#   2: Down    5: +5V (host)   8: COMMON / TH
+#   3: Left    6: TRIG-A       9: GND
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component DSUB9_SolderCup_Edge_package:
+    """D-SUB 9pin **メス** (ハンダカップ型、金属シェル除去、基板エッジ差し込み)。"""
+
+    trait is_atomic_part<manufacturer="GENERIC", partnumber="DSUB9_SolderCup_Edge", footprint="DSUB9_SolderCup_Edge.kicad_mod", symbol="DSUB9_SolderCup_Edge.kicad_sym", model="DSUB9_SolderCup_Edge.step">
+    # 手はんだ部品のため BOM ピッカーをスキップさせるダミー LCSC 番号
+    # (MiniDIN_7P_X68000 と同じ扱い)。
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C0000000", manufacturer="GENERIC", partno="DSUB9_SolderCup_Edge">
+    trait has_designator_prefix<prefix="J">
+
+    signal P1 ~ pin 1    # Up
+    signal P2 ~ pin 2    # Down
+    signal P3 ~ pin 3    # Left
+    signal P4 ~ pin 4    # Right
+    signal P5 ~ pin 5    # +5V (host)
+    signal P6 ~ pin 6    # TRIG-A
+    signal P7 ~ pin 7    # TRIG-B
+    signal P8 ~ pin 8    # COMMON / TH
+    signal P9 ~ pin 9    # GND

@@ -30,6 +30,7 @@ KiCad Libraries (CC-BY-SA 4.0 + 例外条項) のコピー。シンボルとラ�
 | 部品ディレクトリ | LCSC | Origin | データシート |
 |---|---|---|---|
 | `AO3401A_SOT23` | C15127 | 自作 | — |
+| `DSUB9_SolderCup_Edge` | C0000000 | 自作 | — |
 | `CONNFLY_Elec_DS1037_09FNAKT74_0CC` | C75749 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_CONNFLY-Elec-DS1037-09FNAKT74-0CC_C75749.pdf) |
 | `Everlight_Elec_19_217_GHC_YR1S2_3T` | C72043 | ベンダー由来 | — |
 | `Hubei_KENTO_Elec_KT_0603G` | C12624 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_1806151818_Hubei-KENTO-Elec-KT-0603G_C12624.pdf) |

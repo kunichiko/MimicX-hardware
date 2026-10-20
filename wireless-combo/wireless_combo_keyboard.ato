@@ -1,0 +1,39 @@
+#pragma experiment("BRIDGE_CONNECT")
+
+import has_net_name
+
+from "parts/idc_connectors.ato" import KeyboardIdc8
+from "parts/mini_din7.ato" import MiniDin7Male
+
+
+module WirelessComboKeyboard:
+    """
+    Mimic X — wireless-combo 用キーボード変換基板。
+
+    wireless-combo の J2 (2x4 ボックスヘッダ) から 8 芯フラットケーブルで
+    つなぎ、基板エッジの Mini DIN 7pin で X68000 のキーボード端子に挿す。
+    形状は x68000-keyboard と同じ (エッジ端子まわりは同寸)。
+
+    部品はボックスヘッダとエッジ端子だけの受動基板。ヘッダは親基板
+    (wireless_combo.ato) と同じ parts/idc_connectors.ato の定義を使うので、ケーブルは
+    両端とも 2x4 IDC ソケットを同じ向きに圧着したストレートケーブルでよい。
+    """
+
+    hdr = new KeyboardIdc8      # ← フラットケーブル ← wireless-combo J2
+    kbd = new MiniDin7Male      # → X68000 キーボード端子
+
+    signal vcc2;    trait vcc2    has_net_name<name="VCC_KBD">
+    signal msdata;  trait msdata  has_net_name<name="MSDATA">
+    signal key_rxd; trait key_rxd has_net_name<name="KEY_RXD">
+    signal key_txd; trait key_txd has_net_name<name="KEY_TXD">
+    signal ready;   trait ready   has_net_name<name="READY">
+    signal remote;  trait remote  has_net_name<name="REMOTE">
+    signal gnd;     trait gnd     has_net_name<name="GND">
+
+    hdr.vcc2    ~ vcc2;    vcc2    ~ kbd.vcc2
+    hdr.msdata  ~ msdata;  msdata  ~ kbd.msdata
+    hdr.key_rxd ~ key_rxd; key_rxd ~ kbd.key_rxd
+    hdr.key_txd ~ key_txd; key_txd ~ kbd.key_txd
+    hdr.ready   ~ ready;   ready   ~ kbd.ready
+    hdr.remote  ~ remote;  remote  ~ kbd.remote
+    hdr.gnd     ~ gnd;     gnd     ~ kbd.gnd

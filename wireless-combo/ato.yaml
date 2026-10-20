@@ -7,3 +7,7 @@ paths:
 builds:
   default:
     entry: wireless_combo.ato:WirelessCombo
+  joystick:
+    entry: wireless_combo_joystick.ato:WirelessComboJoystick
+  keyboard:
+    entry: wireless_combo_keyboard.ato:WirelessComboKeyboard

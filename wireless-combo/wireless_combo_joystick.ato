@@ -1,0 +1,44 @@
+#pragma experiment("BRIDGE_CONNECT")
+
+import has_net_name
+
+from "parts/idc_connectors.ato" import JoystickIdc10
+from "parts/dsub9_soldercup.ato" import DSub9FemaleSolderCup
+
+
+module WirelessComboJoystick:
+    """
+    Mimic X — wireless-combo 用ジョイスティック変換基板。
+
+    wireless-combo の J1 (2x5 ボックスヘッダ) から 10 芯フラットケーブルで
+    つなぎ、基板エッジのハンダカップ型 D-SUB 9pin (金属シェル除去) で
+    ホストのジョイスティック端子に挿す。形状は atari-joystick-slim と同じ
+    スリム形 (MSX / FM TOWNS の奥まった端子にも届く)。
+
+    部品はボックスヘッダとエッジ端子だけの受動基板。ヘッダは親基板
+    (wireless_combo.ato) と同じ parts/idc_connectors.ato の定義を使うので、ケーブルは
+    両端とも 2x5 IDC ソケットを同じ向きに圧着したストレートケーブルでよい。
+    """
+
+    hdr = new JoystickIdc10          # ← フラットケーブル ← wireless-combo J1
+    joy = new DSub9FemaleSolderCup   # → ホストのジョイスティック端子
+
+    signal up;     trait up     has_net_name<name="UP">
+    signal down;   trait down   has_net_name<name="DOWN">
+    signal left;   trait left   has_net_name<name="LEFT">
+    signal right;  trait right  has_net_name<name="RIGHT">
+    signal vcc;    trait vcc    has_net_name<name="VCC_JOY">
+    signal triga;  trait triga  has_net_name<name="TRIG_A">
+    signal trigb;  trait trigb  has_net_name<name="TRIG_B">
+    signal common; trait common has_net_name<name="COMMON">
+    signal gnd;    trait gnd    has_net_name<name="GND">
+
+    hdr.up     ~ up;     up     ~ joy.up
+    hdr.down   ~ down;   down   ~ joy.down
+    hdr.left   ~ left;   left   ~ joy.left
+    hdr.right  ~ right;  right  ~ joy.right
+    hdr.vcc    ~ vcc;    vcc    ~ joy.vcc
+    hdr.triga  ~ triga;  triga  ~ joy.triga
+    hdr.trigb  ~ trigb;  trigb  ~ joy.trigb
+    hdr.common ~ common; common ~ joy.common
+    hdr.gnd    ~ gnd;    gnd    ~ joy.gnd

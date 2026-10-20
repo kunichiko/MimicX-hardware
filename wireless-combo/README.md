@@ -121,6 +121,10 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
 
 ## ケーブル配線 (ヘッダ Pin n = フラットケーブルの芯線 n)
 
+専用の[変換基板](#変換基板-joystick--keyboard)を使う場合は、両端とも IDC ソケットを
+同じ向き (1 番線 = ▽ 側) に圧着したストレートケーブルでつなぐ。以下は変換基板を
+使わずにケーブル側で直接コネクタを付ける場合の対応表。
+
 | 2x5 (J: joystick) | D-SUB 9pin | | 2x4 (J: keyboard) | Mini DIN 7pin |
 |---|---|---|---|---|
 | 1 | 1 Up | | 1 | 1 Vcc2 (+5V) |
@@ -146,6 +150,24 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
   片寄せで入ってしまう場合があるので、ケーブルにはラベルを付けておく
 - 基板側: 2x5 ボックスヘッダ BOOMELE 2.54-2\*5P = LCSC C5665、
   2x4 ボックスヘッダ BOOMELE 2.54-2\*4P = LCSC C9135
+
+## 変換基板 (joystick / keyboard)
+
+フラットケーブルの先に付ける受動基板。同じ atopile プロジェクトの別ビルドとして
+持ち、ボックスヘッダは親基板と同じ `parts/idc_connectors.ato` の定義を使う
+(ピン配置が親子で食い違わない)。
+
+| ビルド | エントリ | レイアウト | 構成 | 形状 |
+|---|---|---|---|---|
+| `joystick` | [`wireless_combo_joystick.ato`](wireless_combo_joystick.ato) | `layouts/joystick/` | J1: 2x5 ボックスヘッダ (C5665) / J2: ハンダカップ型 D-SUB 9pin メス用エッジパッド (手はんだ) | atari-joystick-slim 形 35 × 16 mm |
+| `keyboard` | [`wireless_combo_keyboard.ato`](wireless_combo_keyboard.ato) | `layouts/keyboard/` | J1: 2x4 ボックスヘッダ (C9135) / J2: Mini DIN 7pin オス (手はんだ) | x68000-keyboard 形 (本体 20.6 × 12.2 mm) |
+
+- どちらも 2 層、厚さ **1.6 mm** (D-SUB のハンダカップ列の間に入る厚み)
+- コネクタ側は元の基板と同寸 (joystick: 先端 10 mm のエッジパッドと M2.6 用
+  φ2.8 穴 ×2、keyboard: ネックと Mini DIN まわり)。ボックスヘッダを載せるため
+  後ろ側を延長してある (joystick +5 mm、keyboard +6.4 mm)
+- D-SUB の取り付け方は [atari-joystick-slim の README](../atari-joystick-slim/README.md#d-sub-9pin-の取り付け) と同じ
+- 状態: 配線済み、未発注
 
 ### SWD デバッグ端子 (XH 3P, B3B-XH-A = LCSC C144394)
 
@@ -183,5 +205,6 @@ WCH-LinkE でのデバッグ / 強制書き換え用の保険。PC18/PC19 は I2
 
 ```sh
 cd MimicX-hardware/wireless-combo
-ato build
+~/.local/bin/ato build --keep-picked-parts               # 3 基板すべて
+~/.local/bin/ato build --keep-picked-parts -b joystick   # 変換基板だけ (default / joystick / keyboard)
 ```

@@ -175,4 +175,11 @@
 		(options "")
 		(descr "atopile: part lib: MountingHole_M3")
 	)
+	(lib
+		(name "DSUB9_SolderCup_Edge")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/DSUB9_SolderCup_Edge")
+		(options "")
+		(descr "atopile: part lib: DSUB9_SolderCup_Edge")
+	)
 )
