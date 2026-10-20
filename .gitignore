@@ -8,6 +8,10 @@ fp-info-cache
 *.kicad_prl
 *.lck
 
+# KiCad の STEP エクスポート (基板全体の 3D モデル。KiCad からいつでも再生成できる)。
+# parts/ 配下の部品 3D モデル (*.step) は追跡対象なので layouts/ 直下に限定する
+*/layouts/*/*.step
+
 # VS Code Local History extension
 .history/
 
