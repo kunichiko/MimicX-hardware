@@ -2853,7 +2853,7 @@
 				)
 			)
 		)
-		(attr smd)
+		(attr smd exclude_from_pos_files exclude_from_bom)
 		(fp_line
 			(start -8 0)
 			(end 8 0)
@@ -2863,17 +2863,6 @@
 			)
 			(layer "Dwgs.User")
 			(uuid "4fefdc48-cb73-5c05-9293-a131445bdf61")
-		)
-		(fp_rect
-			(start -6.54 -0.25)
-			(end 6.54 4.55)
-			(stroke
-				(width 0.05)
-				(type default)
-			)
-			(fill no)
-			(layer "B.CrtYd")
-			(uuid "871d791e-0354-522d-bd91-c35cf7cf1682")
 		)
 		(fp_rect
 			(start -6.54 -0.25)
