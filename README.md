@@ -47,7 +47,7 @@ D-SUB 9pin メス。X68000 / ATARI 標準ポートに直挿しし、メガドラ
 ### `x68000-keyboard/` — X68000 キーボード / マウスアダプタ
 
 ミニ DIN 7pin オス。X68000 のキーボード端子はマウス端子を兼用しており、本基板も
-1 コネクタで両方をエミュレートする。4 層。**rev 1.0.0、JLCPCB で製造済み。**
+1 コネクタで両方をエミュレートする。4 層。**rev 1.0.0、JLCPCB で製造済み。rev 1.0.1 (外形のセンターずれ修正) は未発注。**
 
 <p align="center">
   <img src="x68000-keyboard/docs/images/x68000-keyboard-photo.jpg" width="46%" alt="assembled x68000-keyboard board, with and without its 3D-printed shell">

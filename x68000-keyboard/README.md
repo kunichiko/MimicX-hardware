@@ -3,7 +3,8 @@
 Mimic X — X68000 キーボードアダプタ基板 (キーボード + マウス相乗り対応)
 
 *USB-MIDI to Sharp X68000 keyboard/mouse port adapter (mini-DIN 7P, 4-layer
-board). Board rev 1.0.0, fabricated at JLCPCB. Designed in
+board). Board rev 1.0.0 fabricated at JLCPCB; rev 1.0.1 (outline centering fix)
+not yet ordered. Designed in
 [atopile](https://atopile.io) — the circuit lives in
 [`x68000_keyboard.ato`](x68000_keyboard.ato), not in a schematic sheet.*
 
