@@ -1,28 +1,28 @@
 (kicad_symbol_lib
 	(version 20241229)
 	(generator "manual_placeholder")
-	(symbol "JST_XH_B9B"
+	(symbol "IDC_Header_2x04"
 		(property "Reference" "J"
 			(id 0)
-			(at 0 16.51 0)
+			(at 0 8.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "JST_XH_B9B"
+		(property "Value" "IDC_Header_2x04"
 			(id 1)
-			(at 0 -16.51 0)
+			(at 0 -8.89 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "JST_XH_B9B"
+		(property "Footprint" "IDC_Header_2x04"
 			(id 2)
-			(at 0 -19.05 0)
+			(at 0 -11.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32,7 +32,7 @@
 		)
 		(property "Datasheet" ""
 			(id 3)
-			(at 0 -21.59 0)
+			(at 0 -13.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -40,10 +40,10 @@
 				(hide yes)
 			)
 		)
-		(symbol "JST_XH_B9B_0_1"
+		(symbol "IDC_Header_2x04_0_1"
 			(rectangle
-				(start -15.24 13.97)
-				(end 15.24 -13.97)
+				(start -5.08 6.35)
+				(end 5.08 -6.35)
 				(stroke
 					(width 0.254)
 					(type default)
@@ -53,60 +53,54 @@
 				)
 			)
 		)
-		(symbol "JST_XH_B9B_1_1"
+		(symbol "IDC_Header_2x04_1_1"
 			(pin passive line
-				(at -17.78 10.16 0)
+				(at -7.62 3.81 0)
 				(length 2.54)
 				(name "P1" (effects (font (size 1.27 1.27))))
 				(number "1" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 7.62 0)
+				(at 7.62 3.81 180)
 				(length 2.54)
 				(name "P2" (effects (font (size 1.27 1.27))))
 				(number "2" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 5.08 0)
+				(at -7.62 1.27 0)
 				(length 2.54)
 				(name "P3" (effects (font (size 1.27 1.27))))
 				(number "3" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 2.54 0)
+				(at 7.62 1.27 180)
 				(length 2.54)
 				(name "P4" (effects (font (size 1.27 1.27))))
 				(number "4" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 0 0)
+				(at -7.62 -1.27 0)
 				(length 2.54)
 				(name "P5" (effects (font (size 1.27 1.27))))
 				(number "5" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 -2.54 0)
+				(at 7.62 -1.27 180)
 				(length 2.54)
 				(name "P6" (effects (font (size 1.27 1.27))))
 				(number "6" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 -5.08 0)
+				(at -7.62 -3.81 0)
 				(length 2.54)
 				(name "P7" (effects (font (size 1.27 1.27))))
 				(number "7" (effects (font (size 1.27 1.27))))
 			)
 			(pin passive line
-				(at -17.78 -7.62 0)
+				(at 7.62 -3.81 180)
 				(length 2.54)
 				(name "P8" (effects (font (size 1.27 1.27))))
 				(number "8" (effects (font (size 1.27 1.27))))
-			)
-			(pin passive line
-				(at -17.78 -10.16 0)
-				(length 2.54)
-				(name "P9" (effects (font (size 1.27 1.27))))
-				(number "9" (effects (font (size 1.27 1.27))))
 			)
 		)
 	)

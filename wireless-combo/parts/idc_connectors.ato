@@ -1,0 +1,76 @@
+# ボックスヘッダ (2.54mm IDC) ケーブル用コネクタ — ラッパーモジュール
+#
+# Combo 版は D-SUB9 / Mini DIN7 を基板直付けせず、汎用フラットケーブル経由で
+# 接続する。シュラウドの切り欠きで逆挿しは起きない。
+#
+# ケーブル側の注意:
+#   - 10P ソケットは 8P ヘッダに入らない。逆に 8P ソケットは 10P ヘッダの
+#     シュラウドに (片寄せで) 入ってしまう場合があるので、ケーブルには
+#     ラベルを付けておくこと
+#   - DIN シールドはケーブル側コネクタの根元で GND (Pin7) に落とす
+
+from "IDC_Header_2x05/IDC_Header_2x05.ato" import IDC_Header_2x05_package
+from "IDC_Header_2x04/IDC_Header_2x04.ato" import IDC_Header_2x04_package
+
+
+module JoystickIdc10:
+    """ジョイスティックケーブル用 2x5 ボックスヘッダ (LCSC C5665)。
+
+    ピン配置は 10 芯フラットケーブルに **IDC 圧着型の D-SUB 9pin メス** を
+    そのまま圧着したとき (PC のシリアルポート用ブラケットケーブルと同じ
+    "AT/Intel" 配列) に D-SUB のピン番号と一致するように並べてある。
+    芯線 n = ヘッダの Pin n で、IDC D-SUB は芯線を 1→1, 2→6, 3→2, 4→7 … と
+    上段 / 下段に交互に振り分ける:
+
+        ヘッダ Pin : 1  2  3  4  5  6  7  8  9  10
+        D-SUB Pin  : 1  6  2  7  3  8  4  9  5  (GND)
+
+    D-SUB 側のピン機能 (ATARI / X68000 標準):
+        1: Up         6: TRIG-A
+        2: Down       7: TRIG-B
+        3: Left       8: COMMON / TH
+        4: Right      9: GND
+        5: +5V (ホスト給電)
+    10 番線は IDC D-SUB 側で未接続になるが、基板側では GND にしておく。
+    機能名は dsub9.ato の DSub9Female と互換 (shell を除く。IDC D-SUB には
+    シェル接続がない)。
+    """
+
+    chip = new IDC_Header_2x05_package
+
+    signal up;     up     ~ chip.P1    # D-SUB 1
+    signal triga;  triga  ~ chip.P2    # D-SUB 6
+    signal down;   down   ~ chip.P3    # D-SUB 2
+    signal trigb;  trigb  ~ chip.P4    # D-SUB 7
+    signal left;   left   ~ chip.P5    # D-SUB 3
+    signal common; common ~ chip.P6    # D-SUB 8
+    signal right;  right  ~ chip.P7    # D-SUB 4
+    signal gnd;    gnd    ~ chip.P8    # D-SUB 9
+    signal vcc;    vcc    ~ chip.P9    # D-SUB 5
+    gnd ~ chip.P10                     # 余りピン (D-SUB 側は未接続)
+
+
+module KeyboardIdc8:
+    """キーボードケーブル用 2x4 ボックスヘッダ (LCSC C9135)。
+
+    IDC 圧着型の Mini DIN は存在しないので、ケーブルの反対側は DIN プラグ
+    へ手配線する。配線を追いやすいよう **芯線 n = ヘッダ Pin n = DIN Pin n**
+    (Pin 1〜7) とし、余る Pin 8 は GND を重ねる:
+
+        1: Vcc2 (+5V)         5: READY
+        2: MSDATA              6: REMOTE
+        3: KEY RxD             7: GND (+ケーブル側でシールドも落とす)
+        4: KEY TxD             8: GND (予備。DIN 側では使わなくてよい)
+    機能名は mini_din7.ato の MiniDin7Male と互換。
+    """
+
+    chip = new IDC_Header_2x04_package
+
+    signal vcc2;    vcc2    ~ chip.P1
+    signal msdata;  msdata  ~ chip.P2
+    signal key_rxd; key_rxd ~ chip.P3
+    signal key_txd; key_txd ~ chip.P4
+    signal ready;   ready   ~ chip.P5
+    signal remote;  remote  ~ chip.P6
+    signal gnd;     gnd     ~ chip.P7
+    gnd ~ chip.P8

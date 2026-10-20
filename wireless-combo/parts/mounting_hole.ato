@@ -1,0 +1,11 @@
+# ネジ穴 — ラッパーモジュール
+
+from "MountingHole_M3/MountingHole_M3.ato" import MountingHole_M3_package
+
+
+module MountingHoleM3Gnd:
+    """M3 ネジ穴。パッドは GND に接続して使う。"""
+
+    chip = new MountingHole_M3_package
+
+    signal gnd; gnd ~ chip.P1

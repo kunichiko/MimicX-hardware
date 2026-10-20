@@ -12,6 +12,8 @@ Origin が **ベンダー由来** の部品のシンボル・フットプリン�
 LCSC / EasyEDA のデータを atopile (faebryk) が変換したもの、およびそれを
 KiCad で調整した派生物であり、**このリポジトリのライセンスの対象外**。
 Origin が **自作** の部品はディレクトリ全体が CERN-OHL-S-2.0 の対象。
+Origin が **KiCad 標準ライブラリ** の部品は、フットプリントと 3D モデルが
+KiCad Libraries (CC-BY-SA 4.0 + 例外条項) のコピー。シンボルとラッパ .ato は自作。
 詳細はリポジトリルートの [`NOTICE`](../../NOTICE) を参照。
 
 > KiCad の footprint editor で保存し直すと `generator` フィールドが `pcbnew` に
@@ -32,9 +34,10 @@ Origin が **自作** の部品はディレクトリ全体が CERN-OHL-S-2.0 の
 | `Everlight_Elec_19_217_GHC_YR1S2_3T` | C72043 | ベンダー由来 | — |
 | `Hubei_KENTO_Elec_KT_0603G` | C12624 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_1806151818_Hubei-KENTO-Elec-KT-0603G_C12624.pdf) |
 | `Hubei_KENTO_Elec_KT_0603R` | C2286 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_1810231112_Hubei-KENTO-Elec-KT-0603R_C2286.pdf) |
+| `IDC_Header_2x04` | C9135 | KiCad 標準ライブラリ | — |
+| `IDC_Header_2x05` | C5665 | KiCad 標準ライブラリ | — |
 | `JST_XH_B3B` | C144394 | 自作 | — |
-| `JST_XH_B7B` | C144398 | 自作 | — |
-| `JST_XH_B9B` | C157966 | 自作 | — |
+| `MountingHole_M3` | C0000000 (ダミー、非実装) | KiCad 標準ライブラリ | — |
 | `MiniDIN_7P_X68000` | C0000000 | 自作 | — |
 | `SS14_SMA` | C2480 | 自作 | — |
 | `Samsung_Electro_Mechanics_CL05B104KO5NNNC` | C1525 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B104KO5NNNC_C1525.pdf) |

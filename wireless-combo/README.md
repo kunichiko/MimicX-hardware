@@ -17,12 +17,14 @@ BLE-MIDI 無線対応の Combined アダプタ。1 枚の基板に
 
 - **Seeed XIAO ESP32-C6** — BLE-MIDI ホスト / CH32 の自動 OTA (SWD) / 電源・BOOT 制御
 - **CH32X035G8U6** — デバイスエンジン (`combined-i2c` ファーム)
-- **JST XH 9P** — ケーブル経由で D-SUB 9pin (ATARI / X68000 / MD ジョイスティック)
-- **JST XH 7P** — ケーブル経由で Mini DIN 7pin (X68000 キーボード / マウス / REMOTE)
+- **2x5 ボックスヘッダ** — フラットケーブル経由で D-SUB 9pin (ATARI / X68000 / MD ジョイスティック)
+- **2x4 ボックスヘッダ** — フラットケーブル経由で Mini DIN 7pin (X68000 キーボード / マウス / REMOTE)
 - **JST XH 3P** — WCH-LinkE 用 SWD デバッグ端子 (保険)
+- **M3 ネジ穴 ×4** — メッキ穴、GND 接続 (ケース固定用)
 
-D-SUB / Mini DIN は基板直付けせず、JST XH (ロック付き・逆挿し不可・3A) 経由の
-ケーブル接続とする。9P ≠ 7P なのでケーブルの挿し間違いは物理的に起きない。
+D-SUB / Mini DIN は基板直付けせず、2.54mm ボックスヘッダ (逆挿し不可) 経由の
+汎用フラットケーブル接続とする。2x5 側は IDC 圧着型 D-SUB 9pin をそのまま
+圧着したケーブルが使える配列にしてある。
 
 を搭載する。ファームウェアは既存の 2 チップ構成 (protocol §2.5) をそのまま使う:
 CH32 側 = `MimicX-firmware/platforms/ch32x035` の `combined-i2c` env、
@@ -117,23 +119,33 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
 - CH32 の USB は未接続 (PC16 = NC, PC17 = BOOT 制御専用)。最終復旧手段も
   ESP32 経由の BOOT+SWD で代替できるため、wchisp 用 USB は設けない
 
-## ケーブル配線 (XH ピン番号 = 先方コネクタのピン番号)
+## ケーブル配線 (ヘッダ Pin n = フラットケーブルの芯線 n)
 
-| XH 9P (J: joystick) | D-SUB 9pin | | XH 7P (J: keyboard) | Mini DIN 7pin |
+| 2x5 (J: joystick) | D-SUB 9pin | | 2x4 (J: keyboard) | Mini DIN 7pin |
 |---|---|---|---|---|
 | 1 | 1 Up | | 1 | 1 Vcc2 (+5V) |
-| 2 | 2 Down | | 2 | 2 MSDATA |
-| 3 | 3 Left | | 3 | 3 KEY RxD |
-| 4 | 4 Right | | 4 | 4 KEY TxD |
-| 5 | 5 +5V (ホスト給電) | | 5 | 5 READY |
-| 6 | 6 TRIG-A | | 6 | 6 REMOTE |
-| 7 | 7 TRIG-B | | 7 | 7 GND (シールドもここへ) |
-| 8 | 8 COMMON / TH | | | |
-| 9 | 9 GND (シェルもここへ) | | | |
+| 2 | 6 TRIG-A | | 2 | 2 MSDATA |
+| 3 | 2 Down | | 3 | 3 KEY RxD |
+| 4 | 7 TRIG-B | | 4 | 4 KEY TxD |
+| 5 | 3 Left | | 5 | 5 READY |
+| 6 | 8 COMMON / TH | | 6 | 6 REMOTE |
+| 7 | 4 Right | | 7 | 7 GND (シールドもここへ) |
+| 8 | 9 GND | | 8 | GND (予備) |
+| 9 | 5 +5V (ホスト給電) | | | |
+| 10 | GND (D-SUB 側は未接続) | | | |
 
-- D-SUB シェル / DIN シールドは**ケーブル側コネクタの根元で GND 線に合流**させる
-- 基板側: B9B-XH-A(LF)(SN) = LCSC C157966、B7B-XH-A(LF)(SN) = LCSC C144398
-- ケーブル側: XHP-9 / XHP-7 ハウジング + SXH-001T-P0.6 コンタクト
+- **ジョイスティック**: 10 芯フラットケーブルの片側に 2x5 IDC ソケット、反対側に
+  **IDC 圧着型 D-SUB 9pin メス** を (1 番線 = D-SUB Pin1 に合わせて) 圧着するだけ
+  でよい。IDC D-SUB は芯線を 1→1, 2→6, 3→2 … と上下段に交互に振り分けるため、
+  上表のヘッダ配列になっている (PC のシリアルポート用ブラケットケーブルと同じ
+  "AT/Intel" 配列)。10 番線 (基板側 GND) は D-SUB 側で未接続
+- **キーボード**: IDC 圧着型の Mini DIN は無いので、8 芯フラットケーブルの片側に
+  2x4 IDC ソケットを圧着し、反対側は芯線 1〜7 を DIN プラグの同番ピンへ手配線する。
+  DIN シールドは**ケーブル側コネクタの根元で GND (7 番線) に合流**させる
+- 10P ソケットは 8P ヘッダに入らないが、8P ソケットは 10P ヘッダのシュラウドに
+  片寄せで入ってしまう場合があるので、ケーブルにはラベルを付けておく
+- 基板側: 2x5 ボックスヘッダ BOOMELE 2.54-2\*5P = LCSC C5665、
+  2x4 ボックスヘッダ BOOMELE 2.54-2\*4P = LCSC C9135
 
 ### SWD デバッグ端子 (XH 3P, B3B-XH-A = LCSC C144394)
 
@@ -157,7 +169,7 @@ WCH-LinkE でのデバッグ / 強制書き換え用の保険。PC18/PC19 は I2
 - [ ] `parts/XIAO_ESP32C6/` のフットプリントは**仮置き** (2.54mm ピッチ /
       列間 15.24mm)。Seeed 公式の機械図面と照合して確定させる
 - [ ] `parts/AO3401A_SOT23/` の SOT-23 ランド、`parts/SS14_SMA/` の SMA ランド、
-      `parts/JST_XH_B9B/` `parts/JST_XH_B7B/` `parts/JST_XH_B3B/` の XH ランドを
+      `parts/JST_XH_B3B/` の XH ランドを
       データシート推奨値と照合
 - [ ] 信号ラインの TVS (SP3012-04UTG 等) 追加検討 — ケーブル化で配線が伸びる
       ため既存基板より優先度高

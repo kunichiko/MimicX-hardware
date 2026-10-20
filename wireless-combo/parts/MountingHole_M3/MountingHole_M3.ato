@@ -1,0 +1,23 @@
+# M3 ネジ穴 (メッキ穴 + GND パッド) — アトミック部品定義
+#
+# ケース固定用。穴 φ3.2 / パッド φ6.4 (表裏) + 周囲にビア 8 個。
+# ネジ / スペーサ経由でケースと GND を共通にする。
+#
+# フットプリントは KiCad 標準ライブラリ
+# (MountingHole: MountingHole_3.2mm_M3_Pad_Via) のコピー。
+# 実装部品ではないので footprint 側で exclude_from_bom / exclude_from_pos_files
+# を立ててある (JLCPCB PCBA の BOM / CPL に載らない)。LCSC 番号はダミー。
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component MountingHole_M3_package:
+    """M3 メッキ穴 (MountingHole_3.2mm_M3_Pad_Via)。"""
+
+    trait is_atomic_part<manufacturer="GENERIC", partnumber="MountingHole_M3", footprint="MountingHole_M3.kicad_mod", symbol="MountingHole_M3.kicad_sym", model="MountingHole_M3.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C0000000", manufacturer="GENERIC", partno="MountingHole_M3">
+    trait has_designator_prefix<prefix="H">
+
+    signal P1 ~ pin 1

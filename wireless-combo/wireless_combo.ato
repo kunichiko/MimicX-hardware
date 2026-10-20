@@ -7,8 +7,8 @@ import has_net_name
 
 from "parts/ch32x035.ato" import CH32X035G8U6
 from "parts/xiao_esp32c6.ato" import XiaoEsp32C6
-from "parts/xh_connectors.ato" import JoystickXh9
-from "parts/xh_connectors.ato" import KeyboardXh7
+from "parts/idc_connectors.ato" import JoystickIdc10
+from "parts/idc_connectors.ato" import KeyboardIdc8
 from "parts/xh_connectors.ato" import SwdDebugXh3
 from "parts/buttons.ato" import TactSwitch_2P
 from "parts/level_shifter.ato" import LevelShifter8Bit
@@ -16,6 +16,7 @@ from "parts/leds.ato" import LedGreenKT0603
 from "parts/leds.ato" import LedRgbWs2812b
 from "parts/pfet.ato" import PFetHighSide
 from "parts/schottky.ato" import SchottkyDiode
+from "parts/mounting_hole.ato" import MountingHoleM3Gnd
 
 
 module WirelessCombo:
@@ -26,11 +27,13 @@ module WirelessCombo:
         ↕ I2C / SWD 共用 2 線 + INT       (protocol §2.5, 2 チップ構成)
     CH32X035G8U6 (デバイスエンジン, combined-i2c ファーム)
         ↕ TC7MPB9307FT ×2 (5V↔3.3V level shifter)
-    JST XH 9P → ケーブル → D-SUB 9pin (ATARI/X68000 ジョイスティック)
-    JST XH 7P → ケーブル → Mini DIN 7pin (X68000 キーボード/マウス)
+    2x5 ボックスヘッダ → フラットケーブル → D-SUB 9pin (ATARI/X68000 ジョイスティック)
+    2x4 ボックスヘッダ → フラットケーブル → Mini DIN 7pin (X68000 キーボード/マウス)
 
-    コネクタ (D-SUB/DIN) は基板直付けせず、JST XH (ロック付き・逆挿し不可・
-    3A) 経由のケーブル接続とする。XH のピン番号は先方コネクタの番号と 1:1。
+    コネクタ (D-SUB/DIN) は基板直付けせず、2.54mm ボックスヘッダ (逆挿し不可)
+    経由の汎用フラットケーブル接続とする。2x5 は IDC 圧着型 D-SUB 9pin を
+    そのまま付けられる配列、2x4 はヘッダ Pin n = DIN Pin n
+    (詳細は parts/idc_connectors.ato)。
 
     ファームウェア対応:
       - CH32 側: MimicX-firmware `combined-i2c` env (BOARD_COMBINED + MIMICX_I2C)
@@ -96,8 +99,8 @@ module WirelessCombo:
     # ===== サブブロック =====
     esp = new XiaoEsp32C6
     mcu = new CH32X035G8U6
-    joy = new JoystickXh9     # → ケーブル → D-SUB 9pin
-    kbd = new KeyboardXh7     # → ケーブル → Mini DIN 7pin
+    joy = new JoystickIdc10   # → フラットケーブル → D-SUB 9pin
+    kbd = new KeyboardIdc8    # → フラットケーブル → Mini DIN 7pin
     lvls_joy = new LevelShifter8Bit    # ジョイスティック側 5V↔3.3V
     lvls_kbd = new LevelShifter8Bit    # キーボード側 5V↔3.3V
 
@@ -266,7 +269,7 @@ module WirelessCombo:
     lvls_kbd.power_a ~ vdd_sw
     lvls_kbd.power_b ~ vcc_kbd
 
-    # ===== ジョイスティック (XH 9P → D-SUB 9pin, combined-i2c: PA0, PA2-PA7) =====
+    # ===== ジョイスティック (2x5 ボックスヘッダ → D-SUB 9pin, combined-i2c: PA0, PA2-PA7) =====
     # ピン割当は atari-joystick 基板と同一 (firmware functions/joystick 準拠)。
     signal up_3v3;     trait up_3v3     has_net_name<name="UP_3V3">
     signal down_3v3;   trait down_3v3   has_net_name<name="DOWN_3V3">
@@ -288,9 +291,9 @@ module WirelessCombo:
     lvls_joy.a8 ~ vdd_sw.lv
 
     joy.vcc ~ vcc_joy.hv       # D-SUB Pin5: ホスト +5V → レベルシフタ B 側電源
-    joy.gnd ~ vdd33.lv         # D-SUB シェルはケーブル側で Pin9(GND) に落とす
+    joy.gnd ~ vdd33.lv         # D-SUB Pin9 (IDC 圧着型 D-SUB にシェル接続はない)
 
-    # ===== キーボード/マウス (XH 7P → Mini DIN 7pin, combined-i2c: PB8-PB12) =====
+    # ===== キーボード/マウス (2x4 ボックスヘッダ → Mini DIN 7pin, combined-i2c: PB8-PB12) =====
     # ピン割当は x68000-keyboard 基板と同一 (firmware functions/x68k_* 準拠)。
     signal key_txd_3v3; trait key_txd_3v3 has_net_name<name="KEY_TXD_3V3">
     signal key_rxd_3v3; trait key_rxd_3v3 has_net_name<name="KEY_RXD_3V3">
@@ -313,6 +316,18 @@ module WirelessCombo:
     kbd.vcc2 ~ vcc_kbd.hv      # DIN Pin1: ホスト +5V → レベルシフタ B 側電源
     kbd.gnd ~ vdd33.lv         # DIN シールドはケーブル側で Pin7(GND) に落とす
 
-    # TODO: 各信号ライン (lvls_*.b* と XH コネクタの間) に TVS ダイオード
+    # TODO: 各信号ライン (lvls_*.b* とボックスヘッダの間) に TVS ダイオード
     # アレイ (SP3012-04UTG, PESD5V0S4UD 等) を追加して ESD 保護を強化する。
     # ケーブル化で配線が伸びるため、既存 2 基板より優先度が高い。
+
+    # ===== ネジ穴 (M3 ×4, GND 接続) =====
+    # ケース固定用。メッキ穴のパッドを GND に落とし、ネジ / スペーサ経由で
+    # ケース側と GND を共通にする。
+    hole1 = new MountingHoleM3Gnd
+    hole2 = new MountingHoleM3Gnd
+    hole3 = new MountingHoleM3Gnd
+    hole4 = new MountingHoleM3Gnd
+    hole1.gnd ~ vdd33.lv
+    hole2.gnd ~ vdd33.lv
+    hole3.gnd ~ vdd33.lv
+    hole4.gnd ~ vdd33.lv

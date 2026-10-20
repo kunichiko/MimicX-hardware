@@ -76,6 +76,16 @@ generator の値では由来を判別できません (git 履歴が一次情報�
   git show $(git log --format=%H --follow -- <path> | tail -1):<path> \
       | grep -m1 generator
 
+ただし次のディレクトリのシンボル以外 (*.kicad_mod / *.step) は KiCad 標準
+ライブラリ (Connector_IDC: IDC-Header_2x0N_P2.54mm_Vertical、
+MountingHole: MountingHole_3.2mm_M3_Pad_Via) のコピーで、
+KiCad Libraries のライセンス (CC-BY-SA 4.0 + 例外条項,
+https://www.kicad.org/libraries/license/) に従います。
+
+  wireless-combo/parts/IDC_Header_2x04/
+  wireless-combo/parts/IDC_Header_2x05/
+  wireless-combo/parts/MountingHole_M3/
+
 同ディレクトリ内の <part>.ato は、部品を Mimic X の回路に接続するための
 手書きラッパであり、すべて CERN-OHL-S-2.0 の対象です。
 
@@ -89,8 +99,6 @@ faebryk_convert の混入がないことを確認済みです。
   <board>/parts/AO3401A_SOT23/
   <board>/parts/DSUB9_SolderCup_Edge/
   <board>/parts/JST_XH_B3B/
-  <board>/parts/JST_XH_B7B/
-  <board>/parts/JST_XH_B9B/
   <board>/parts/MiniDIN_7P_X68000/
   <board>/parts/SS14_SMA/
   <board>/parts/XIAO_ESP32C6/
