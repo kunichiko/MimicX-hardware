@@ -51,7 +51,7 @@
 			)
 		)
 	)
-	(attr through_hole)
+	(attr through_hole exclude_from_pos_files exclude_from_bom)
 	(pad "1" thru_hole circle
 		(at -5 1.12)
 		(size 1.2 1.2)
