@@ -7,7 +7,7 @@ paths:
 builds:
   default:
     entry: wireless_combo.ato:WirelessCombo
-  joystick:
-    entry: wireless_combo_joystick.ato:WirelessComboJoystick
-  keyboard:
-    entry: wireless_combo_keyboard.ato:WirelessComboKeyboard
+  atari-joystick-bo:
+    entry: atari_joystick_bo.ato:AtariJoystickBo
+  x68000-keyboard-bo:
+    entry: x68000_keyboard_bo.ato:X68000KeyboardBo

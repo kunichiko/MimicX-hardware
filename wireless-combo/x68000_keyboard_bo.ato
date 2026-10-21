@@ -6,7 +6,7 @@ from "parts/idc_connectors.ato" import KeyboardIdc8
 from "parts/mini_din7.ato" import MiniDin7Male
 
 
-module WirelessComboKeyboard:
+module X68000KeyboardBo:
     """
     Mimic X — wireless-combo 用キーボード変換基板。
 

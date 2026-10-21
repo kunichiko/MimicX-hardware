@@ -115,8 +115,8 @@ module WirelessCombo:
     # ダイオードにより:
     #   - VCC_JOY と VCC_KBD が基板内で直結されない (両ポート同時接続 OK)
     #   - USB VBUS がホスト側 (レトロ機) へ逆流しない
-    # SS14 の Vf ≈ 0.35V @0.3A なので VCC_ESP ≈ 4.65V → XIAO 内蔵 LDO の
-    # 入力範囲として十分。
+    # B5819W (SOD-123) の Vf は 0.3A 付近で 0.4V 台なので VCC_ESP ≈ 4.5〜4.6V
+    # → XIAO 内蔵 LDO の入力範囲として十分。
     d_joy = new SchottkyDiode
     vcc_joy.hv ~ d_joy.anode
     d_joy.cathode ~ vcc_esp.hv

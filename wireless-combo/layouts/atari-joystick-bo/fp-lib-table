@@ -78,13 +78,6 @@
 		(descr "atopile: part lib: MountingHole_M3")
 	)
 	(lib
-		(name "SS14_SMA")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/SS14_SMA")
-		(options "")
-		(descr "atopile: part lib: SS14_SMA")
-	)
-	(lib
 		(name "Samsung_Electro_Mechanics_CL05B104KO5NNNC")
 		(type "KiCad")
 		(uri "${KIPRJMOD}/../../parts/Samsung_Electro_Mechanics_CL05B104KO5NNNC")
@@ -181,5 +174,12 @@
 		(uri "${KIPRJMOD}/../../parts/XUNPU_TS_1088_AR02016")
 		(options "")
 		(descr "atopile: part lib: XUNPU_TS_1088_AR02016")
+	)
+	(lib
+		(name "B5819W_SOD123")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/B5819W_SOD123")
+		(options "")
+		(descr "atopile: part lib: B5819W_SOD123")
 	)
 )

@@ -6,7 +6,7 @@ from "parts/idc_connectors.ato" import JoystickIdc10
 from "parts/dsub9_soldercup.ato" import DSub9FemaleSolderCup
 
 
-module WirelessComboJoystick:
+module AtariJoystickBo:
     """
     Mimic X — wireless-combo 用ジョイスティック変換基板。
 

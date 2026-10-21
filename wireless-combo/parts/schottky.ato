@@ -1,13 +1,13 @@
 # ショットキーバリアダイオード — ラッパーモジュール
 #
-# アトミック部品は `parts/SS14_SMA/SS14_SMA.ato`。電源 OR-ing
+# アトミック部品は `parts/B5819W_SOD123/B5819W_SOD123.ato`。電源 OR-ing
 # (VCC_JOY / VCC_KBD → VCC_ESP) に使う。
 
-from "SS14_SMA/SS14_SMA.ato" import SS14_SMA_package
+from "B5819W_SOD123/B5819W_SOD123.ato" import B5819W_SOD123_package
 
 
 module SchottkyDiode:
-    """ショットキーバリアダイオード SS14 の MimicX 用ラッパー。
+    """ショットキーバリアダイオード B5819W (SOD-123) の MimicX 用ラッパー。
 
     使用例 (電源 OR-ing):
         d = new SchottkyDiode
@@ -15,7 +15,7 @@ module SchottkyDiode:
         d.cathode ~ vcc_esp.hv
     """
 
-    chip = new SS14_SMA_package
+    chip = new B5819W_SOD123_package
 
     signal anode;   anode   ~ chip.A
     signal cathode; cathode ~ chip.K

@@ -89,13 +89,13 @@ ENTER_SWD ハンドオフ (CH32 ファームの協力前提) に依存しない�
 5V 電源は 3 系統あり、**どれか 1 つでも供給されていれば動作する**:
 
 ```
-USB-C (XIAO) ────────────────┬── VCC_ESP (5V 幹線 = XIAO 5V ピン)
-VCC_JOY (D-SUB Pin5) ─▶|SS14─┤        │ XIAO 内蔵 LDO
-VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
-                                    VDD33 (3.3V 常時系)
-                                      │ Q1 (P-FET)
-                                      ▼
-                                    VDD_SW (CH32 サブシステム)
+USB-C (XIAO) ──────────────────┬── VCC_ESP (5V 幹線 = XIAO 5V ピン)
+VCC_JOY (D-SUB Pin5) ─▶|B5819W─┤        │ XIAO 内蔵 LDO
+VCC_KBD (DIN Pin1)   ─▶|B5819W─┘        ▼
+                                      VDD33 (3.3V 常時系)
+                                        │ Q1 (P-FET)
+                                        ▼
+                                      VDD_SW (CH32 サブシステム)
 ```
 
 - XIAO の 3V3 ピンは内蔵 LDO の**出力** (入力不可)。USB 未接続時はホスト 5V を
@@ -106,7 +106,7 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
   ノイズや電流に不安が出た場合は VCC_ESP → 外付け 3.3V レギュレータで
   ESP32 以外の 3.3V を分離する代替案あり (既存基板の LP5907MFX-3.3 は 250mA で
   この用途には十分。ただし ESP32 本体は駆動できない点に注意)
-- SS14 の Vf ≈ 0.35V → ホスト給電時 VCC_ESP ≈ 4.65V。ダイオードにより
+- B5819W (SOD-123, LCSC C8598) の Vf は 0.3A 付近で 0.4V 台 → ホスト給電時 VCC_ESP ≈ 4.5〜4.6V。ダイオードにより
   VCC_JOY / VCC_KBD は相互に直結されず、USB VBUS からホストへの逆流もない
 - ホスト給電時は ESP32 の無線 TX バースト (数百 mA) がレトロ機のポート給電に
   乗る。VCC_ESP に 22µF バルクを置いて平滑しているが、**ホスト側ポートの
@@ -121,7 +121,7 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
 
 ## ケーブル配線 (ヘッダ Pin n = フラットケーブルの芯線 n)
 
-専用の[変換基板](#変換基板-joystick--keyboard)を使う場合は、両端とも IDC ソケットを
+専用の[変換基板](#変換基板-atari-joystick-bo--x68000-keyboard-bo)を使う場合は、両端とも IDC ソケットを
 同じ向き (1 番線 = ▽ 側) に圧着したストレートケーブルでつなぐ。以下は変換基板を
 使わずにケーブル側で直接コネクタを付ける場合の対応表。
 
@@ -151,21 +151,22 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
 - 基板側: 2x5 ボックスヘッダ BOOMELE 2.54-2\*5P = LCSC C5665、
   2x4 ボックスヘッダ BOOMELE 2.54-2\*4P = LCSC C9135
 
-## 変換基板 (joystick / keyboard)
+## 変換基板 (atari-joystick-bo / x68000-keyboard-bo)
 
 フラットケーブルの先に付ける受動基板。同じ atopile プロジェクトの別ビルドとして
 持ち、ボックスヘッダは親基板と同じ `parts/idc_connectors.ato` の定義を使う
-(ピン配置が親子で食い違わない)。
+(ピン配置が親子で食い違わない)。ビルド名の `-bo` は breakout の略。将来ほかの
+ジョイスティックや機種 (PC-98 キーボードなど) 用を足せるよう、対象機の名前を前に付けている。
 
 | ビルド | エントリ | レイアウト | 構成 | 形状 |
 |---|---|---|---|---|
-| `joystick` | [`wireless_combo_joystick.ato`](wireless_combo_joystick.ato) | `layouts/joystick/` | J1: 2x5 ボックスヘッダ (C5665) / J2: ハンダカップ型 D-SUB 9pin メス用エッジパッド (手はんだ) | atari-joystick-slim 形 35 × 16 mm |
-| `keyboard` | [`wireless_combo_keyboard.ato`](wireless_combo_keyboard.ato) | `layouts/keyboard/` | J1: 2x4 ボックスヘッダ (C9135) / J2: Mini DIN 7pin オス (手はんだ) | x68000-keyboard 形 (本体 20.6 × 12.2 mm) |
+| `atari-joystick-bo` | [`atari_joystick_bo.ato`](atari_joystick_bo.ato) | `layouts/atari-joystick-bo/` | J1: 2x5 ボックスヘッダ (C5665) / J2: ハンダカップ型 D-SUB 9pin メス用エッジパッド (手はんだ) | atari-joystick-slim 形 35 × 16 mm |
+| `x68000-keyboard-bo` | [`x68000_keyboard_bo.ato`](x68000_keyboard_bo.ato) | `layouts/x68000-keyboard-bo/` | J1: 2x4 ボックスヘッダ (C9135) / J2: Mini DIN 7pin オス (手はんだ) | x68000-keyboard 形 (本体 20.6 × 12.2 mm) |
 
 - どちらも 2 層、厚さ **1.6 mm** (D-SUB のハンダカップ列の間に入る厚み)
-- コネクタ側は元の基板と同寸 (joystick: 先端 10 mm のエッジパッドと M2.6 用
-  φ2.8 穴 ×2、keyboard: ネックと Mini DIN まわり)。ボックスヘッダを載せるため
-  後ろ側を延長してある (joystick +5 mm、keyboard +6.4 mm)
+- コネクタ側は元の基板と同寸 (atari-joystick-bo: 先端 10 mm のエッジパッドと M2.6 用
+  φ2.8 穴 ×2、x68000-keyboard-bo: ネックと Mini DIN まわり)。ボックスヘッダを載せるため
+  後ろ側を延長してある (atari-joystick-bo +5 mm、x68000-keyboard-bo +6.4 mm)
 - D-SUB の取り付け方は [atari-joystick-slim の README](../atari-joystick-slim/README.md#d-sub-9pin-の取り付け) と同じ
 - 状態: 配線済み、未発注
 
@@ -173,6 +174,7 @@ VCC_KBD (DIN Pin1)   ─▶|SS14─┘        ▼
 
 WCH-LinkE でのデバッグ / 強制書き換え用の保険。PC18/PC19 は I2C/SWD 兼用線
 なので実体は I2C バスのタップ。
+**通常は未実装** (BOM / CPL から除外済み)。使うときだけ B3B-XH-A を手はんだする。
 
 | XH 3P | 信号 |
 |---|---|
@@ -190,7 +192,7 @@ WCH-LinkE でのデバッグ / 強制書き換え用の保険。PC18/PC19 は I2
 
 - [ ] `parts/XIAO_ESP32C6/` のフットプリントは**仮置き** (2.54mm ピッチ /
       列間 15.24mm)。Seeed 公式の機械図面と照合して確定させる
-- [ ] `parts/AO3401A_SOT23/` の SOT-23 ランド、`parts/SS14_SMA/` の SMA ランド、
+- [ ] `parts/AO3401A_SOT23/` の SOT-23 ランド、`parts/B5819W_SOD123/` の SOD-123 ランド (KiCad 標準)、
       `parts/JST_XH_B3B/` の XH ランドを
       データシート推奨値と照合
 - [ ] 信号ラインの TVS (SP3012-04UTG 等) 追加検討 — ケーブル化で配線が伸びる
@@ -206,5 +208,5 @@ WCH-LinkE でのデバッグ / 強制書き換え用の保険。PC18/PC19 は I2
 ```sh
 cd MimicX-hardware/wireless-combo
 ~/.local/bin/ato build --keep-picked-parts               # 3 基板すべて
-~/.local/bin/ato build --keep-picked-parts -b joystick   # 変換基板だけ (default / joystick / keyboard)
+~/.local/bin/ato build --keep-picked-parts -b atari-joystick-bo   # 1 基板だけ (default / atari-joystick-bo / x68000-keyboard-bo)
 ```

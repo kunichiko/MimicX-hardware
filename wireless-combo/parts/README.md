@@ -30,6 +30,7 @@ KiCad Libraries (CC-BY-SA 4.0 + 例外条項) のコピー。シンボルとラ�
 | 部品ディレクトリ | LCSC | Origin | データシート |
 |---|---|---|---|
 | `AO3401A_SOT23` | C15127 | 自作 | — |
+| `B5819W_SOD123` | C8598 | KiCad 標準ライブラリ | — |
 | `DSUB9_SolderCup_Edge` | C0000000 | 自作 | — |
 | `CONNFLY_Elec_DS1037_09FNAKT74_0CC` | C75749 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_CONNFLY-Elec-DS1037-09FNAKT74-0CC_C75749.pdf) |
 | `Everlight_Elec_19_217_GHC_YR1S2_3T` | C72043 | ベンダー由来 | — |
@@ -40,7 +41,6 @@ KiCad Libraries (CC-BY-SA 4.0 + 例外条項) のコピー。シンボルとラ�
 | `JST_XH_B3B` | C144394 | 自作 | — |
 | `MountingHole_M3` | C0000000 (ダミー、非実装) | KiCad 標準ライブラリ | — |
 | `MiniDIN_7P_X68000` | C0000000 | 自作 | — |
-| `SS14_SMA` | C2480 | 自作 | — |
 | `Samsung_Electro_Mechanics_CL05B104KO5NNNC` | C1525 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B104KO5NNNC_C1525.pdf) |
 | `Samsung_Electro_Mechanics_CL10A475KO8NNNC` | C19666 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A475KO8NNNC_C19666.pdf) |
 | `Samsung_Electro_Mechanics_CL21A226MAQNNNE` | C45783 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL21A226MAQNNNE_C45783.pdf) |

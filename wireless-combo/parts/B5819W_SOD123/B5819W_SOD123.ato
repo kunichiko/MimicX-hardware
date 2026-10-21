@@ -1,0 +1,27 @@
+# B5819W — ショットキーバリアダイオード (SOD-123) アトミック部品定義
+#
+# 電源 OR-ing 用 (VCC_JOY / VCC_KBD → VCC_ESP)。SS14 (SMA) から小型化のため
+# 置き換え (部品面に載せるため)。
+#   Vrrm=40V, If=1A, Vf=0.6V @1A (0.3A 付近で 0.4V 台), Pd=500mW
+#   LCSC C8598 (Jiangsu Changjing Electronics / CJ)、JLCPCB Basic Part
+#
+# フットプリント / 3D モデルは KiCad 標準ライブラリ
+# (Diode_SMD: D_SOD-123) のコピー。
+#
+# ピン配置 (カソードバンド側 = pin 1):
+#   1: K (Cathode)   2: A (Anode)
+
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+
+component B5819W_SOD123_package:
+    """ショットキーバリアダイオード B5819W (SOD-123)。"""
+
+    trait is_atomic_part<manufacturer="CJ", partnumber="B5819W SL", footprint="B5819W_SOD123.kicad_mod", symbol="B5819W_SOD123.kicad_sym", model="B5819W_SOD123.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C8598", manufacturer="CJ(Jiangsu Changjing Electronics Technology Co., Ltd.)", partno="B5819W SL">
+    trait has_designator_prefix<prefix="D">
+
+    signal K ~ pin 1    # Cathode (バンド側)
+    signal A ~ pin 2    # Anode
