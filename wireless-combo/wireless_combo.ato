@@ -252,7 +252,7 @@ module WirelessCombo:
     vdd33.hv ~ pled.anode
     pled.cathode ~> rpled ~> vdd33.lv
 
-    # ===== ステータス LED (WS2812B-2020, CH32 PB0 駆動) =====
+    # ===== ステータス LED (WS2812B-2020-V6, CH32 PB0 駆動) =====
     # 電源は VDD_SW (CH32 と同時に落ちる)。470Ω 直列で源端整合 + ESD 緩衝。
     rgb = new LedRgbWs2812b
     rgb.power ~ vdd_sw

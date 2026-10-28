@@ -1,7 +1,7 @@
 (kicad_symbol_lib
 	(version 20241229)
 	(generator "faebryk_convert")
-	(symbol "WS2812B-2020"
+	(symbol "WS2812B-2020-V6"
 		(property "Reference" "LED"
 			(id 0)
 			(at 0 6.35 0)
@@ -11,7 +11,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "WS2812B-2020-V6"
 			(id 1)
 			(at 0 -6.35 0)
 			(effects
@@ -20,7 +20,7 @@
 				)
 			)
 		)
-		(property "Footprint" "C965555:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "C52917434:LED-SMD_4P-L2.2-W2.0-P1.00_WS2815C-2020-4P"
 			(id 2)
 			(at 0 -8.89 0)
 			(effects
@@ -29,18 +29,9 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://lcsc.com/product-detail/Light-Emitting-Diodes-LED_Worldsemi-WS2812B-2020_C965555.html"
-			(id 3)
-			(at 0 -11.43 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC Part" "C965555"
+		(property "LCSC Part" "C52917434"
 			(id 5)
-			(at 0 -13.97 0)
+			(at 0 -11.43 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -49,19 +40,7 @@
 		)
 		(in_bom yes)
 		(on_board yes)
-		(symbol "WS2812B-2020_0_1"
-			(circle
-				(center -5.08 2.54)
-				(end -4.7 2.54)
-				(stroke
-					(width 0)
-					(type default)
-					(color 0 0 0 0)
-				)
-				(fill
-					(type none)
-				)
-			)
+		(symbol "WS2812B-2020-V6_0_1"
 			(rectangle
 				(start -6.35 3.81)
 				(end 6.35 -3.81)
@@ -75,7 +54,7 @@
 				)
 			)
 			(pin unspecified line
-				(at -8.89 1.27 0)
+				(at 8.89 -1.27 180)
 				(length 2.54)
 				(name "DO"
 					(effects
@@ -93,7 +72,7 @@
 				)
 			)
 			(pin unspecified line
-				(at -8.89 -1.27 0)
+				(at 8.89 1.27 180)
 				(length 2.54)
 				(name "GND"
 					(effects
@@ -111,7 +90,7 @@
 				)
 			)
 			(pin unspecified line
-				(at 8.89 -1.27 180)
+				(at -8.89 1.27 0)
 				(length 2.54)
 				(name "DI"
 					(effects
@@ -129,7 +108,7 @@
 				)
 			)
 			(pin unspecified line
-				(at 8.89 1.27 180)
+				(at -8.89 -1.27 0)
 				(length 2.54)
 				(name "VDD"
 					(effects

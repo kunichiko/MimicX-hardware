@@ -1,0 +1,162 @@
+(footprint "Worldsemi_WS2812B_2020_V6:LED-SMD_4P-L2.2-W2.0-P1.00_WS2815C-2020-4P"
+	(version 20241229)
+	(generator "faebryk_convert")
+	(generator_version "v5")
+	(layer "F.Cu")
+	(tedit "5DC5F6A4")
+	(uuid "4c5143f2-830e-44a4-b26e-2cd9faa7d5a4")
+	(property "Reference" "REF**"
+		(at 0 -4.55)
+		(layer "F.SilkS")
+		(uuid "cdb37d06-01c3-4d03-ae72-32fa877d56e7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "LED-SMD_4P-L2.2-W2.0-P1.00_WS2815C-2020-4P"
+		(at 0 4.55)
+		(layer "F.Fab")
+		(uuid "53eebb1b-3726-4728-81e5-d70b87f39826")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_circle
+		(center -1 -1)
+		(end -0.97 -1)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(locked no)
+		(uuid "07ceacb5-8f05-4ed3-85e7-0f11fc0868d6")
+	)
+	(fp_line
+		(start 0.4 -1.13)
+		(end 1 -1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "85c812c4-dffc-41f3-9a2a-c522ab06de2a")
+	)
+	(fp_line
+		(start -0.34 -1.13)
+		(end -1 -1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "3f8c5e9a-fcff-4737-a8e8-daab5775d65d")
+	)
+	(fp_line
+		(start 0.4 -1.13)
+		(end -0.34 -1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "dba05167-4549-4591-8b5a-32f2c531dc8e")
+	)
+	(fp_line
+		(start -0.4 1.13)
+		(end 0.33 1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "518aa0f9-cc18-4f25-bd35-d75169a173b9")
+	)
+	(fp_line
+		(start -0.4 1.13)
+		(end -1 1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "9447319d-4263-4fd1-a28b-f30acb43ecb4")
+	)
+	(fp_line
+		(start 0.33 1.13)
+		(end 1 1.13)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "16620d09-3637-440a-86f7-bc939c23da94")
+	)
+	(fp_line
+		(start -0.2 0.8)
+		(end -0.2 -0.8)
+		(stroke
+			(width 0.4)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(layers "F.SilkS")
+		(locked no)
+		(uuid "ec78e26b-af71-41b2-a351-b5ccdd058c0d")
+	)
+	(pad "2" smd rect
+		(at -0.87 0.55 180)
+		(size 0.8 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "afd59225-99e0-4637-8ae4-cb1761295408")
+	)
+	(pad "3" smd rect
+		(at 0.86 0.55 180)
+		(size 0.8 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "385ddaa6-bb97-4673-a942-ec4597eab87f")
+	)
+	(pad "4" smd rect
+		(at 0.86 -0.55 180)
+		(size 0.8 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "97d22735-f925-4a94-be8c-d922d8fbc635")
+	)
+	(pad "1" smd rect
+		(at -0.87 -0.55 180)
+		(size 0.8 0.8)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "edf0c333-fa70-44ad-b85f-1e01402f8e85")
+	)
+	(model "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020_V6/WS2812B-2020-V6.step"
+		(offset
+			(xyz 0 0 -0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(embedded_fonts no)
+)

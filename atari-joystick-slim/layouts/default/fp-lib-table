@@ -106,13 +106,6 @@
 		(descr "atopile: part lib: WCH_CH32X035G8U6")
 	)
 	(lib
-		(name "Worldsemi_WS2812B_2020")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020")
-		(options "")
-		(descr "atopile: part lib: Worldsemi_WS2812B_2020")
-	)
-	(lib
 		(name "XKB_Connectivity_TS_1187A_B_A_B")
 		(type "KiCad")
 		(uri "${KIPRJMOD}/../../parts/XKB_Connectivity_TS_1187A_B_A_B")
@@ -125,5 +118,12 @@
 		(uri "${KIPRJMOD}/../../parts/XUNPU_TS_1088_AR02016")
 		(options "")
 		(descr "atopile: part lib: XUNPU_TS_1088_AR02016")
+	)
+	(lib
+		(name "Worldsemi_WS2812B_2020_V6")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020_V6")
+		(options "")
+		(descr "atopile: part lib: Worldsemi_WS2812B_2020_V6")
 	)
 )

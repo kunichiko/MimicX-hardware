@@ -51,7 +51,7 @@ KiCad Libraries (CC-BY-SA 4.0 + 例外条項) のコピー。シンボルとラ�
 | `UNI_ROYAL_0402WGF4700TCE` | C25117 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2205311900_UNI-ROYAL-Uniroyal-Elec-0402WGF4700TCE_C25117.pdf) |
 | `UNI_ROYAL_0402WGF4701TCE` | C25900 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf) |
 | `WCH_CH32X035G8U6` | C7437027 | ベンダー由来 | [PDF](https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404070952_WCH-Jiangsu-Qin-Heng-CH32X035G8U6_C7437027.pdf) |
-| `Worldsemi_WS2812B_2020` | C965555 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2012110135_Worldsemi-WS2812B-2020_C965555.pdf) |
+| `Worldsemi_WS2812B_2020_V6` | C52917434 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/C52917434.pdf) |
 | `XIAO_ESP32C6` | C0000001 | 自作 | — |
 | `XKB_Connectivity_TS_1187A_B_A_B` | C318884 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_XKB-Connection-TS-1187A-B-A-B_C318884.pdf) |
 | `XUNPU_TS_1088_AR02016` | C720477 | ベンダー由来 | [PDF](https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_XUNPU-TS-1088-AR02016_C720477.pdf) |

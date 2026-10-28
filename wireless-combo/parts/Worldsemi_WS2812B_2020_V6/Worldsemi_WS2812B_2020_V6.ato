@@ -1,0 +1,18 @@
+import has_datasheet
+import has_designator_prefix
+import has_part_picked
+import is_atomic_part
+
+component Worldsemi_WS2812B_2020_V6_package:
+    trait is_atomic_part<manufacturer="Worldsemi", partnumber="WS2812B-2020-V6", footprint="LED-SMD_4P-L2.2-W2.0-P1.00_WS2815C-2020-4P.kicad_mod", symbol="WS2812B-2020-V6.kicad_sym", model="WS2812B-2020-V6.step">
+    trait has_part_picked::by_supplier<supplier_id="lcsc", supplier_partno="C52917434", manufacturer="Worldsemi", partno="WS2812B-2020-V6">
+    trait has_designator_prefix<prefix="LED">
+    trait has_datasheet<datasheet="https://www.lcsc.com/datasheet/C52917434.pdf">
+
+    # 3D モデルは EasyEDA に無いため、ほぼ同外形の旧品 WS2812B-2020 (C965555) のものを流用
+
+    # pins
+    signal DI ~ pin 3
+    signal DO ~ pin 1
+    signal GND ~ pin 2
+    signal VDD ~ pin 4

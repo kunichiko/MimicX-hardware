@@ -113,13 +113,6 @@
 		(descr "atopile: part lib: WCH_CH32X035G8U6")
 	)
 	(lib
-		(name "Worldsemi_WS2812B_2020")
-		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020")
-		(options "")
-		(descr "atopile: part lib: Worldsemi_WS2812B_2020")
-	)
-	(lib
 		(name "XIAO_ESP32C6")
 		(type "KiCad")
 		(uri "${KIPRJMOD}/../../parts/XIAO_ESP32C6")
@@ -181,5 +174,12 @@
 		(uri "${KIPRJMOD}/../../parts/B5819W_SOD123")
 		(options "")
 		(descr "atopile: part lib: B5819W_SOD123")
+	)
+	(lib
+		(name "Worldsemi_WS2812B_2020_V6")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020_V6")
+		(options "")
+		(descr "atopile: part lib: Worldsemi_WS2812B_2020_V6")
 	)
 )

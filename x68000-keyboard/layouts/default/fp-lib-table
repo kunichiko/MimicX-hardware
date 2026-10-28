@@ -127,10 +127,10 @@
 		(descr "atopile: part lib: Hubei_KENTO_Elec_KT_0603G")
 	)
 	(lib
-		(name "Worldsemi_WS2812B_2020")
+		(name "Worldsemi_WS2812B_2020_V6")
 		(type "KiCad")
-		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020")
+		(uri "${KIPRJMOD}/../../parts/Worldsemi_WS2812B_2020_V6")
 		(options "")
-		(descr "atopile: part lib: Worldsemi_WS2812B_2020")
+		(descr "atopile: part lib: Worldsemi_WS2812B_2020_V6")
 	)
 )
