@@ -1218,7 +1218,7 @@
 			(justify left mirror)
 		)
 	)
-	(gr_text "GND\n"
+	(gr_text "GND"
 		(at 149.5044 99.8728 0)
 		(layer "B.SilkS")
 		(uuid "9aad5158-63b4-4ad3-8955-1cf678244e49")
