@@ -157,6 +157,7 @@
 			(outputdirectory "")
 		)
 	)
+	(property "BOARD_REV" "v1.0.0")
 	(net 0 "")
 	(net 1 "PB3")
 	(net 2 "PB1_T1C3N_RX4_O2N1_A9_PB5_O1O1_T3C2_T1BK")
@@ -6391,7 +6392,7 @@
 			(justify mirror)
 		)
 	)
-	(gr_text "v1.0.0 by @kunichiko"
+	(gr_text "${BOARD_REV} by @kunichiko"
 		(at 112 95.25 0)
 		(layer "B.SilkS")
 		(uuid "db0fcc72-360c-4eac-a304-52a89b17447a")
