@@ -62,31 +62,35 @@
       ],
       "drc_exclusions": [
         [
-          "silk_edge_clearance|102767500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|17b9c4ef-d2de-4dd9-b297-b46396f3535a",
+          "silk_edge_clearance|104767500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|17b9c4ef-d2de-4dd9-b297-b46396f3535a",
           ""
         ],
         [
-          "silk_edge_clearance|104077500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|612e27ca-f79a-4a79-8e61-eb930d4089ab",
+          "silk_edge_clearance|106077500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|612e27ca-f79a-4a79-8e61-eb930d4089ab",
           ""
         ],
         [
-          "silk_edge_clearance|95000000|102050000|ba36e760-7607-4be3-9403-e4fd09d83588|d6a4f6e5-49c3-46a3-8b61-72e9ce212992",
+          "silk_edge_clearance|97000000|102050000|ba36e760-7607-4be3-9403-e4fd09d83588|d6a4f6e5-49c3-46a3-8b61-72e9ce212992",
           ""
         ],
         [
-          "silk_edge_clearance|95000000|93000000|54ade8fe-044e-426e-955c-cc356d92347e|3727da2b-4c81-4dc9-80b4-f87b4185fa3d",
+          "silk_edge_clearance|97000000|93000000|54ade8fe-044e-426e-955c-cc356d92347e|3727da2b-4c81-4dc9-80b4-f87b4185fa3d",
           ""
         ],
         [
-          "silk_edge_clearance|95000000|97950000|ba36e760-7607-4be3-9403-e4fd09d83588|148d061c-d456-4099-a280-a309d07df725",
+          "silk_edge_clearance|97000000|97950000|ba36e760-7607-4be3-9403-e4fd09d83588|148d061c-d456-4099-a280-a309d07df725",
           ""
         ],
         [
-          "silk_edge_clearance|96267500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|9799d2c7-d789-40d5-8354-dbd947e70e59",
+          "silk_edge_clearance|98267500|108000000|9de53f4c-8312-446b-9c2c-6de73f9e0178|9799d2c7-d789-40d5-8354-dbd947e70e59",
           ""
         ],
         [
-          "silk_edge_clearance|96267500|92000000|fbf3e6c6-97e8-4df6-a43b-81d327adb6cd|89b8250a-6c99-4da6-ac1f-34fc66448156",
+          "silk_edge_clearance|98267500|92000000|fbf3e6c6-97e8-4df6-a43b-81d327adb6cd|89b8250a-6c99-4da6-ac1f-34fc66448156",
+          ""
+        ],
+        [
+          "silk_over_copper|99430165|104832064|63cb3eeb-ff9b-4f54-9057-a774874ecd3e|00000000-0000-0000-0000-000000000000",
           ""
         ]
       ],
@@ -135,7 +139,7 @@
         "shorting_items": "error",
         "silk_edge_clearance": "warning",
         "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
