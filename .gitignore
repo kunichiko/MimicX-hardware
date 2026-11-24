@@ -19,6 +19,9 @@ fp-info-cache
 gerber/
 fabrication/
 
+# Fabrication Toolkit が再出力のたびに作る旧製造データの退避 (不要)
+*/layouts/*/production/backups/
+
 # IDE
 .idea/
 .vscode/
